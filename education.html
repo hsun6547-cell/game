@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>千紗的一週</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--paper:#eef2f3;--grid:#d6e0e3;--ink:#1d2a36;--muted:#5b6b78;--accent:#0f7a6c;--accent-soft:#d3ebe6;--warn:#b3541e;--card:#f8fafa;--line:#c3cfd4;--f-display:"LXGW WenKai TC","Noto Serif TC",serif;--f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#141b21;--grid:#1e2830;--ink:#e3eaee;--muted:#93a3ae;--accent:#4cc3ae;--accent-soft:#183a35;--warn:#e5935f;--card:#1a232a;--line:#2c3a44;color-scheme:dark}}
+*{box-sizing:border-box}body{background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7;padding:18px 12px 36px}
+.wrap{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+header.top{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;border-bottom:2px solid var(--ink);padding-bottom:7px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(22px,4vw,28px);margin:0}
+.clock{font-family:var(--f-mono);font-size:12px;color:var(--muted)}.clock b{color:var(--accent)}
+.passage{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:18px 16px;position:relative}
+.passage::before{content:"";position:absolute;left:7px;top:0;bottom:0;border-left:1px solid var(--warn);opacity:.35}
+.pname{font-family:var(--f-mono);font-size:10px;color:var(--muted);margin-bottom:2px}
+.passage h2{font-family:var(--f-display);font-size:19px;margin:0 0 9px}
+.passage p{margin:0 0 9px;max-width:44em}
+.delta{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:1px 5px;border-radius:3px;background:var(--accent-soft);color:var(--accent);margin:1px 3px 1px 0}
+.delta.neg{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+.explain{margin-top:8px;padding:8px 10px;border:1px dashed var(--line);border-radius:4px;font-size:12.5px}
+.explain b{color:var(--accent)}
+.aftermath{margin-top:7px;padding:8px 10px;background:rgba(0,0,0,.03);border-radius:4px;font-size:12.5px;color:var(--muted)}
+.links{display:flex;flex-direction:column;gap:5px;margin-top:12px}
+.links button{text-align:left;font:inherit;font-size:13px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:4px;padding:7px 9px;cursor:pointer;display:flex;gap:5px;align-items:baseline}
+.links button::before{content:"→";color:var(--accent);font-family:var(--f-mono)}
+.links button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.links button:disabled{opacity:.45;cursor:not-allowed}
+.links button small{color:var(--muted);font-size:10px;margin-left:auto;font-family:var(--f-mono)}
+aside.log{display:flex;flex-direction:column;gap:9px;position:sticky;top:8px}
+@media(max-width:900px){aside.log{position:static}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:9px 11px}
+.card h3{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+.stat{display:grid;grid-template-columns:auto 1fr auto;gap:1px 4px;align-items:center;font-size:11px;margin-bottom:4px}
+.bar{grid-column:1/-1;height:3px;background:var(--grid);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.low i{background:var(--warn)}
+.vars{font-family:var(--f-mono);font-size:10px;line-height:1.4;margin:0;white-space:pre-wrap}
+.vars .c{color:var(--muted)}
+.tools{display:flex;gap:4px;flex-wrap:wrap}
+.tools button{font-family:var(--f-mono);font-size:10px;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:2px 5px;cursor:pointer}
+.toast{font-size:10px;color:var(--muted);font-family:var(--f-mono);min-height:1em}
+input[type=text],input[type=number]{font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:3px;width:100%;max-width:170px;background:var(--card);color:var(--ink)}
+label{display:block;margin:4px 0 1px;font-size:12px}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;margin:6px 0;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 id="game-title">千紗的一週</h1>
+    <div class="clock" id="clock"></div>
+  </header>
+  <main class="story"><article class="passage" id="passage" aria-live="polite"></article></main>
+  <aside class="log">
+    <div class="card" id="stats"><h3>狀態</h3></div>
+    <div class="card" id="os-card" style="display:none"><h3>男朋友心中 OS</h3><div id="os-text" style="font-size:12px;line-height:1.5"></div></div>
+    <div class="card"><h3>State</h3><pre class="vars" id="vars"></pre></div>
+    <div class="card">
+      <h3>存檔</h3>
+      <div class="tools">
+        <button id="btn-save" type="button">存檔</button>
+        <button id="btn-load" type="button">讀檔</button>
+        <button id="btn-reset" type="button">重新開始</button>
+      </div>
+      <div class="toast" id="toast"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const SLOTS=["早上","下午","晚上"], WEEKDAYS=["週一","週二","週三","週四","週五"];
+const CAMPUS_LOCS=[
+  {id:"classroom",label:"自己的教室"},{id:"art",label:"美術教室"},{id:"rooftop",label:"屋頂"},
+  {id:"toilet",label:"女廁"},{id:"empty",label:"空教室"},{id:"gym",label:"體育館器材室"},{id:"office",label:"老師辦公室"}
+];
+const OUT_LOCS=[
+  {id:"convenience",label:"便利商店巷弄"},{id:"river",label:"河岸"},
+  {id:"apartment",label:"舊公寓"},{id:"parking",label:"停車場"}
+];
+const LOC_ACTORS={
+  classroom:["後排的男同學","鄰座的男生","班上比較安靜的男同學"],
+  art:["美術社的學長","正在留校的美術老師","來借用教室的男同學"],
+  rooftop:["社團的學長","偷偷抽菸的男同學","體育社團的學長"],
+  toilet:["跟進來的男同學","剛好經過的學長","認識的男同學"],
+  empty:["在空教室會合的男同學","社團學長與朋友","認識你的學長們"],
+  gym:["社團學長","體育老師的助手","來拿器材的男同學"],
+  office:["任課老師","代課的年輕男老師","輔導老師"],
+  convenience:["便利商店的男店員","在店外閒晃的路人","剛買完東西的男性"],
+  river:["在河岸散步的男性","附近的男子","騎車經過的年輕男性"],
+  apartment:["這棟的男性住戶","被叫來的朋友","認識你的學長"],
+  parking:["在停車場抽菸的男性","剛停車的男人","附近工地的工人"],
+  train:["站在你身後的男性","裝成不經意靠近的上班族","看似學生的年輕男性"]
+};
+const LOC_PEOPLE={
+  classroom:[6,20], art:[4,12], rooftop:[2,8], toilet:[1,4],
+  empty:[1,2], gym:[3,10], office:[2,6],
+  convenience:[1,5], river:[5,10], apartment:[1,4], parking:[2,8],
+  train:[8,25]
+};
+/* 地點對應的「人」稱呼，用於發現人數描述 */
+const LOC_CROWD_LABEL={
+  classroom:"同學", art:"同學／學長", rooftop:"同學", toilet:"路人",
+  empty:"同學", gym:"同學", office:"老師／職員",
+  convenience:"路人", river:"路人", apartment:"住戶", parking:"路人",
+  train:"乘客"
+};
+
+const fresh=()=>({
+  day:0,slot:0,
+  heroine:"千紗",bfName:"山本",
+  fame:5,know:20,yield:0,
+  energy:70,corruption:5,arousal:0,
+  mouth:0,pussy:0,ass:0,people:0,harass:0,
+  exposure:0,
+  toys:{vibe:false,plug:false,dildo:false,chain:false,noBra:false,noPanty:false},
+  // 即時衣著狀態（與早晨配件連動，露出脫衣後會持續，直到主動穿回）
+  clothes:{top:true,bottom:true,bra:true,panty:true},
+  flags:{
+    usedCampus:[],usedOut:[],
+    orgyDay:false,orgyCount:0,
+    dest:null,trackRate:0,
+    datedToday:false,phase:"day",
+    nightEnergy:0,lastArea:"campus",
+    evt:null,
+    afterClimax:null,
+    witnessPending:null, afterWitness:null,
+    currentLoc:null, currentLocName:null,
+    expo:{active:false,top:true,bottom:true,bra:true,panty:true,discover:0,found:0,locId:null,locName:null,people:0}
+  },
+  lastExplain:[],aftermath:"",os:"",
+  passage:"setup"
+});
+let S=fresh(), lastDelta=[];
+
+const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
+const clamp200=v=>Math.max(0,Math.min(200,v));
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const chance=p=>Math.random()<p;
+function randInt(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+
+function toyCount(){
+  const t=S.toys;
+  return [t.vibe,t.plug,t.dildo,t.chain,t.noBra,t.noPanty].filter(Boolean).length;
+}
+function fx(ch,explain=[],aftermath=""){
+  for(const [k,v] of Object.entries(ch)){
+    if(k==="flags"){Object.assign(S.flags,v);continue}
+    if(k==="toys"){Object.assign(S.toys,v);continue}
+    const before=S[k];
+    if(["mouth","pussy","ass","people","harass","exposure"].includes(k)) S[k]+=v;
+    else if(k==="know") S[k]=clamp(S[k]+Math.min(v,10));
+    else if(k==="yield") S[k]=clamp200(S[k]+Math.min(v,10));
+    else if(k==="fame") S[k]=clamp(S[k]+v);
+    else S[k]=clamp(S[k]+v);
+    const d=S[k]-before; if(d) lastDelta.push([k,d]);
+  }
+  S.lastExplain=explain; S.aftermath=aftermath||"";
+}
+const LABEL={energy:"體力",corruption:"沉淪度",arousal:"興奮度",know:"知情度",yield:"屈服度",fame:"知名度",mouth:"口",pussy:"穴",ass:"後穴",people:"經驗人數",harass:"騷擾人數",exposure:"露出經驗"};
+
+function updateOS(){
+  if(S.know<20){S.os="";return}
+  if(S.know<=30) S.os=rnd(["她最近回來衣服有時會皺……大概是公車太擠了吧。","總覺得她看我的眼神會閃爍，是不是壓力太大？","她洗澡的時間好像變長了。應該只是我多心。"]);
+  else if(S.know<=60) S.os=rnd(["她今天又晚歸，走路姿勢不太自然。我是不是該問清楚？","那些模糊的影片……真的只是長得很像嗎？","我昨天跟在她後面走了一段。她進了巷子，我沒敢再跟進去。"]);
+  else if(S.know<=90) S.os=rnd(["我看到了。她真的被其他男人壓在牆上。","為什麼她沒有反抗？還是說她已經習慣了？","我應該生氣才對。可是看著那些影片的時候，身體卻有了反應。"]);
+  else S.os=rnd(["我已經把她送到那邊了。關門時聽見裡面有人在笑。","看著她被使用的影片，我居然會一邊看一邊自慰。","她回來時會主動靠過來。我沒有推開。"]);
+}
+
+function getLocPeople(locId){const r=LOC_PEOPLE[locId]||[1,5];return randInt(r[0],r[1])}
+function calcRates(isTrain=false){
+  const f=S.fame,c=toyCount();
+  let peep=0,harass=0,single=0,multi=0;
+  if(f<10) peep=50;
+  else if(f<30) harass=Math.min(75,50+c*5);
+  else if(f<50){harass=Math.min(75,25+c*5);single=Math.min(75,25+c*5)}
+  else if(f<80){const b=15+Math.floor(c*5/2);single=b;multi=b}
+  else{const t=25+c*5;single=Math.floor(t*0.3);multi=Math.floor(t*0.7)}
+  if(isTrain&&f>10&&harass<30) harass=Math.min(65,35+c*5);
+  return {peep,harass,single,multi};
+}
+function currentEnergy(){return S.flags.phase==="night"?S.flags.nightEnergy:S.energy}
+function spendEnergy(amount){
+  if(S.flags.phase==="night") S.flags.nightEnergy=Math.max(0,S.flags.nightEnergy-amount);
+  else S.energy=Math.max(0,S.energy-amount);
+}
+function getActor(locId){return rnd(LOC_ACTORS[locId]||LOC_ACTORS.train)}
+function setLastAreaByLoc(locId){
+  if(CAMPUS_LOCS.some(l=>l.id===locId)) S.flags.lastArea="campus";
+  else if(OUT_LOCS.some(l=>l.id===locId)) S.flags.lastArea="outside";
+}
+
+function getExposureFeel(people){
+  if(people<1) return "";
+  const exp=S.exposure;
+  if(exp<20) return rnd(["周圍有人的視線讓你整個人僵住。肌膚暴露在空氣中的感覺異常清晰，羞恥像潮水一樣湧上來，雙腿不由自主地想併攏。","被別人看著的認知讓你耳根發燙。空氣直接碰觸乳頭與私處的感覺既陌生又難受，你幾乎想立刻把衣服穿回去。","心跳得很快。有人在看——這個事實讓你的呼吸變淺，下腹卻不受控制地緊縮，身體與心理都還沒準備好。"]);
+  if(exp<50) return rnd(["周圍的視線讓你感到強烈的羞恥，但下腹同時湧上一股微微的熱意。空氣摩擦過敏感部位的感覺，讓你既想逃跑又有些捨不得結束。","被人看著的羞恥感還在，可身體已經開始習慣這種暴露。乳頭在涼風中挺立，私處也隱隱發熱，你清楚知道自己正在產生反應。","視線像實質的觸碰。你感到不適與興奮同時存在，雙腿之間已經有些濕潤，這讓你更加羞恥，卻也更難移開。"]);
+  return rnd(["被眾人注視的感覺讓你興奮得幾乎站不穩。空氣直接吹過濕潤的私處，乳頭硬得發疼，你能清楚感覺到自己正在被當成風景欣賞。","視線落在你身上的每一秒都像在愛撫。羞恥早已轉化成快感，你甚至下意識地挺起胸、分開雙腿，讓自己被看得更清楚。","暴露在他人目光下的刺激感已經蓋過羞恥。私處不受控制地收縮，愛液順著大腿往下淌，你知道自己現在的樣子有多下流，卻只感到更深的興奮。"]);
+}
+
+/* 發現人數專用描述 */
+function getFoundPeopleText(){
+  const e=S.flags.expo;
+  const n=e.found||0;
+  if(n<=0) return "";
+  const label=LOC_CROWD_LABEL[e.locId]||"路人";
+  const exp=S.exposure;
+  if(n===1){
+    if(exp<20) return `身邊有 1 名【${label}】發現了你。他正目不轉睛地看著你，視線毫不掩飾地掃過你的胸部與下身。你的心臟狂跳，乳尖在空氣中硬得發疼，雙腿忍不住想併攏。`;
+    if(exp<50) return `身邊有 1 名【${label}】發現了你。他正盯著你看，視線像實質的觸碰。羞恥讓你臉頰發燙，但下腹同時湧上一股熱意，乳尖與私處都變得更加敏感。`;
+    return `身邊有 1 名【${label}】發現了你。他正目不轉睛地欣賞你的身體。被注視的感覺讓你興奮得幾乎站不穩，乳頭硬挺，私處不受控制地收縮。`;
+  }
+  if(n<=3){
+    if(exp<20) return `身邊已有 ${n} 名【${label}】發現了你。他們正圍過來，目光一寸寸刮過你的肌膚。你的心臟幾乎要跳出胸腔，乳尖在眾人視線下硬得發疼，私處因緊張而微微收縮。`;
+    if(exp<50) return `身邊已有 ${n} 名【${label}】發現了你。他們正目不轉睛地看著你。羞恥與興奮同時湧上，你能感覺到自己的乳頭挺立、私處開始濕潤，卻無法把身體藏起來。`;
+    return `身邊已有 ${n} 名【${label}】發現了你。他們的視線像無數雙手在撫摸你。被眾人注視的刺激感讓你雙腿發軟，乳尖硬得發疼，愛液已經順著大腿往下淌。`;
+  }
+  // 較多人
+  if(exp<20) return `身邊已有 ${n} 名【${label}】發現了你，幾乎形成一圈圍觀。無數視線同時落在你赤裸的身體上。你的心臟狂跳到發痛，乳尖在眾目睽睽下挺立，私處因極度緊張而不停收縮，雙腿幾乎站不穩。`;
+  if(exp<50) return `身邊已有 ${n} 名【${label}】發現了你。圍觀的人越來越多，目光毫不掩飾。羞恥讓你耳根發燙，但身體卻誠實地產生反應——乳頭硬挺，私處濕潤，呼吸變得急促。`;
+  return `身邊已有 ${n} 名【${label}】發現了你。他們正圍著你，像在欣賞一件展品。被眾人注視的快感已經蓋過羞恥，你甚至下意識地挺起胸、分開雙腿，讓自己被看得更清楚。乳尖硬得發疼，愛液不斷從穴口溢出。`;
+}
+
+function getToyMock(){
+  const t=S.toys; const lines=[];
+  if(t.vibe) lines.push("他摸到你體內正在震動的跳蛋，低聲笑了：「還自己塞著玩具出門？真騷。」");
+  if(t.plug) lines.push("他的手指碰到後穴的肛塞，故意轉了一下：「後面也塞著？準備得很齊全嘛。」");
+  if(t.dildo) lines.push("他發現你穴裡還插著假陽具，直接握住底座往外抽了一點又推回去：「自己在玩啊？」");
+  if(t.chain) lines.push("他扯了一下你胸前的鍊子，乳頭被拉得發疼：「專門戴給人看的？」");
+  if(t.noBra) lines.push("他隔著衣服揉上你的胸，輕易就感覺到沒有穿內衣：「不穿內衣就出門？故意的吧。」");
+  if(t.noPanty) lines.push("他的手直接碰到裸露的私處，低笑：「連內褲都不穿？真方便。」");
+  return lines.length?rnd(lines):"";
+}
+function getToyPlay(){
+  const t=S.toys; const lines=[];
+  if(t.vibe) lines.push("他沒有把跳蛋拿出來，反而把震動開到最大，讓它在你體內不停跳動，自己則在旁邊抽送。");
+  if(t.plug) lines.push("他握住肛塞的拉環，一邊抽送一邊緩慢地拉出又推回，讓後穴反覆被撐開。");
+  if(t.dildo) lines.push("他把假陽具抽出來，用上面沾滿的體液塗在你的陰蒂上快速摩擦，然後又重新塞回去。");
+  if(t.chain) lines.push("他拉著胸鍊，強迫你挺起胸部，每一下抽送都讓鍊子拉扯乳頭。");
+  return lines.length?rnd(lines):"";
+}
+function getAftermathText(choice){
+  if(S.corruption>50) return rnd(["你靠著牆壁，雙腿還在發抖。身體卻不受控制地回味方才被填滿、被刺激的感覺，連呼吸都變得有些發熱。","你急忙整理衣服，但指尖仍在微微顫抖。腦海裡反覆閃過剛才的畫面，穴口還殘留著被使用後的餘韻，讓你莫名地感到空虛。","你低著頭整理裙擺。明明應該感到羞恥，身體卻誠實地記得被侵犯時的快感，連大腿根部都還在輕輕抽動。","你把散亂的頭髮撥到耳後。剛才被射進去的感覺還很清晰，你忍不住夾緊雙腿，卻發現這樣反而讓殘留的精液又往外溢了一點。"]);
+  return choice==="accept"?"你沒有立刻整理衣服，只是靠著牆壁調整呼吸。":"你急忙整理衣服，雙腿還在發軟。";
+}
+function getWitnessThoughts(isSex){
+  if(isSex) return rnd([
+    {thought:`${S.bfName}站在能看見的距離，整個人僵住了。\n他看見其他男人的性器在你體內進出，聽見肉體撞擊的聲音，也看見你的表情。\n「為什麼……她沒有反抗？」這個想法像釘子一樣釘進他的腦子。他的拳頭握得很緊，卻一步也沒有上前。`,action:`事後他沒有現身。他只是默默跟在你後面一段距離，直到確認你安全離開，才自己轉身走掉。那天晚上他幾乎沒有說話。`},
+    {thought:`${S.bfName}把整段過程看完了。\n他看見你被壓在牆上，裙子被掀起，男人一次次頂進去。你的聲音斷斷續續地傳過來。\n他的胸口像被什麼東西堵住，呼吸變得很淺。他發現自己竟然硬了——這個認知讓他感到強烈的自我厭惡。`,action:`他沒有出面。等那些人離開後，他才慢慢走近你剛才被使用的地方，站了一會兒，然後轉身離開。回家的路上他一直在想，自己到底該怎麼面對你。`}
+  ]);
+  return rnd([{thought:`${S.bfName}看見有人的手伸進你的裙子。\n他下意識往前走了一步，卻又停住。對方的手指在動，你的身體微微顫抖。他的大腦一片空白。`,action:`他沒有衝出去。等那人離開後，他才從角落走出來，遠遠看著你整理衣服的背影。他沒有跟上去，只是站在原地很久。`}]);
+}
+
+/** 衣著暴露等級：full / partial / none */
+function getNakedLevel(){
+  const c=S.clothes;
+  const full=!c.top&&!c.bottom&&!c.bra&&!c.panty;
+  if(full) return "full";
+  const topless=!c.top||!c.bra;
+  const bottomless=!c.bottom||!c.panty;
+  if(topless||bottomless) return "partial";
+  return "none";
+}
+
+/** 依衣著產生補充氛圍文本 */
+function getClothesAtmosphere(locName){
+  const c=S.clothes;
+  const level=getNakedLevel();
+  if(level==="full"){
+    return rnd([
+      `你全身赤裸地待在${locName}。肌膚直接接觸空氣，乳頭與私處都毫無遮擋，每一次呼吸都讓你更清楚自己現在的樣子。心跳加速，腿間隱隱發熱。`,
+      `完全沒有穿任何衣物。風吹過乳尖與陰唇的感覺異常清晰，你能感覺到自己的身體在眾人可能看見的地方完全敞開。緊張與莫名的興奮同時湧上。`,
+      `全身赤裸的狀態讓你每一步都異常敏感。胸部隨著動作輕微晃動，私處完全暴露，你不得不提醒自己不要夾緊雙腿——那樣反而更顯眼。`
+    ]);
+  }
+  if(level==="partial"){
+    const bits=[];
+    if(!c.top&&!c.bra) bits.push("上空，乳房完全暴露");
+    else if(!c.top) bits.push("上衣已脫，只剩內衣");
+    else if(!c.bra) bits.push("沒穿內衣，乳尖隔著上衣摩擦");
+    if(!c.bottom&&!c.panty) bits.push("下身完全赤裸，小穴與臀縫都看得見");
+    else if(!c.bottom) bits.push("下衣已脫，只剩內褲");
+    else if(!c.panty) bits.push("沒穿內褲，私處直接貼著下衣");
+    const desc=bits.join("，");
+    return rnd([
+      `你以${desc}的狀態待在${locName}。暴露的部位不斷提醒你現在有多危險，心跳不由自主地加快。`,
+      `目前${desc}。涼意與被看見的意識讓你輕輕發抖，卻又無法立刻把衣服穿回去。`,
+      `你維持著${desc}的樣子。每當有腳步聲靠近，你的呼吸就會瞬間屏住，乳尖或私處的敏感度都明顯提高。`
+    ]);
+  }
+  return "";
+}
+
+function stayAtLocation(){
+  const locId=S.flags.currentLoc;
+  const locName=S.flags.currentLocName||"此地";
+  if(!locId) return {title:"接下來",text:["要繼續活動嗎？"],links:[{label:"回主選單",go:"hub"}]};
+  const links=[
+    {label:"進行日常活動",go:"daily_act",loc:locId},
+    {label:"什麼都不做，休息",go:"daily_rest"}
+  ];
+  if(!S.clothes.top) links.push({label:"穿回上衣",go:"put_on",part:"top"});
+  if(!S.clothes.bottom) links.push({label:"穿回下衣",go:"put_on",part:"bottom"});
+  if(!S.clothes.bra) links.push({label:"穿回內衣",go:"put_on",part:"bra"});
+  if(!S.clothes.panty) links.push({label:"穿回內褲",go:"put_on",part:"panty"});
+  const canExpo=(S.exposure>=70)||(S.exposure>=50&&S.flags.lastArea==="outside")||(S.exposure>=20&&S.flags.phase==="night");
+  if(canExpo) links.push({label:"野外露出",go:"expo_start",loc:locId});
+  links.push({label:"離開此地，前往其他地方",go:"after_loc"});
+  links.push({label:"直接回家",go:"go_home"});
+  const status=[];
+  if(!S.clothes.top) status.push("上衣已脫");
+  if(!S.clothes.bottom) status.push("下衣已脫");
+  if(!S.clothes.bra) status.push("內衣已脫（上空）");
+  if(!S.clothes.panty) status.push("內褲已脫");
+  const statusText=status.length?`目前衣著：${status.join("、")}`:"";
+  const atmosphere=getClothesAtmosphere(locName);
+  return {title:`仍在${locName}`,text:[`你還在${locName}。要在這裡做什麼？`,statusText,atmosphere].filter(Boolean),links};
+}
+
+/* ========== 騷擾連續行為鏈 ========== */
+const HARASS_CHAIN={
+  // key: { text: 起始/延續描述, next: 可銜接的下一動作 keys }
+  finger_pussy:{
+    text:"他的手指已經伸進你的裙子，直接探入前穴，在濕潤的內壁裡攪動。",
+    next:["finger_pussy_deep","finger_clit","finger_ass","hand_chest"]
+  },
+  finger_pussy_deep:{
+    text:"他加進第二根手指，在穴裡快速抽插，指節故意頂壓敏感點，發出清晰的水聲。",
+    next:["finger_clit","finger_ass","handjob","mouth_force"]
+  },
+  finger_clit:{
+    text:"他的手指轉而快速摩擦你的陰蒂，力度又重又密，另一只手則固定住你的腰不讓你後退。",
+    next:["finger_pussy","finger_pussy_deep","hand_chest","handjob"]
+  },
+  finger_ass:{
+    text:"他繞到你身後，手指強行擠進後穴，緩慢卻用力地抽插，另一只手仍在前面玩弄。",
+    next:["finger_pussy_deep","handjob","mouth_force","hand_chest"]
+  },
+  hand_chest:{
+    text:"他的手從衣領伸進去，用力揉捏你的乳房，指尖夾住乳頭又拉又轉。",
+    next:["finger_pussy","finger_clit","mouth_rub","handjob"]
+  },
+  hand_thigh:{
+    text:"他隔著衣服搓揉你的胸部，另一只手已經摸到大腿內側，朝私處逼近。",
+    next:["finger_pussy","finger_clit","hand_chest","mouth_rub"]
+  },
+  handjob:{
+    text:"他抓住你的手，強迫你握住他的性器上下套弄，同時自己的手指仍埋在你體內。",
+    next:["mouth_rub","mouth_force","finger_pussy_deep","hand_chest"]
+  },
+  mouth_rub:{
+    text:"他拿出性器，抵在你嘴邊與嘴唇上來回摩擦，龜頭偶爾頂開你的唇縫，卻還沒真正進入。",
+    next:["mouth_force","handjob","finger_clit"]
+  },
+  mouth_force:{
+    text:"他強迫你張嘴，把性器整個塞進來，抓著你的後腦開始抽送，每一下都頂到喉嚨。",
+    next:["mouth_force","handjob","finger_pussy_deep","hand_chest"]
+  }
+};
+const HARASS_START_KEYS=["finger_pussy","finger_ass","handjob","hand_chest","hand_thigh","mouth_rub"];
+
+function startHarass(locId,locName,isTrain=false,people=null){
+  if(!isTrain) setLastAreaByLoc(locId);
+  S.flags.currentLoc=locId; S.flags.currentLocName=locName;
+  const ppl=people??getLocPeople(locId);
+  const actor=getActor(locId);
+  const key=rnd(HARASS_START_KEYS);
+  const actionText=HARASS_CHAIN[key].text;
+  S.flags.evt={
+    type:"harass",stage:0,actor,
+    actionKey:key, action:actionText,
+    shotsLeft:2+Math.floor(Math.random()*3),
+    intensity:0,locId,locName,isTrain,people:ppl
+  };
+  return renderEvtChoice();
+}
+/* ========== 多人體位與部位分配系統 ========== */
+const BODY_PARTS = ["口","胸","穴","後穴","左手","右手"];
+const POSITIONS = ["躺下","趴下","站立","跪姿","坐著上位"];
+
+/** 每位參與者獨立 50% 機率決定是否插入本階段，至少保留 1 人 */
+function decideInsertCount(n){
+  let c=0;
+  for(let i=0;i<n;i++) if(chance(0.5)) c++;
+  return Math.max(1, Math.min(c, BODY_PARTS.length));
+}
+
+/** 隨機不重複分配部位 */
+function assignParts(count){
+  const shuffled=[...BODY_PARTS].sort(()=>Math.random()-0.5);
+  return shuffled.slice(0, Math.min(count, BODY_PARTS.length));
+}
+
+/**
+ * 依已佔用部位過濾合理體位
+ * 規則（可擴充）：
+ * - 有「口」→ 排除「站立」（高度不合理）
+ * - 同時有「口」「穴」「後穴」→ 排除「坐著上位」（角度與支撐困難）
+ * - 同時有「穴」「後穴」且人數≥3 → 優先保留可形成三明治的體位
+ */
+function getPossiblePositions(parts){
+  let pos=[...POSITIONS];
+  const has=p=>parts.includes(p);
+  if(has("口")) pos=pos.filter(p=>p!=="站立");
+  if(has("口")&&has("穴")&&has("後穴")) pos=pos.filter(p=>p!=="坐著上位");
+  // 雙穴同時被用時，站立較難維持穩定
+  if(has("穴")&&has("後穴")&&parts.length>=3) pos=pos.filter(p=>p!=="站立");
+  if(pos.length===0) pos=["躺下","趴下"];
+  return pos;
+}
+
+/** 根據部位組合 + 體位 + 人數 + 強度產生敘事 */
+function generateMultiStageText(e, parts, position){
+  const n=e.n||2;
+  const toyPlay=getToyPlay();
+  const intens=e.intensity||0;
+  const partStr=parts.join("、");
+  const has=p=>parts.includes(p);
+
+  // 部位對應描述片段
+  const partDesc=[];
+  if(has("口")) partDesc.push(rnd([
+    "一人強迫你張嘴含住，整根頂到喉嚨深處",
+    "有人抓著你的後腦，強迫你吞吐他的性器",
+    "前方的人把性器塞進你嘴裡，每一次抽送都帶著唾液聲"
+  ]));
+  if(has("穴")) partDesc.push(rnd([
+    "一人從正面深深進入你的穴，每一下都撞到最深處",
+    "有人整根沒入你的前穴，龜頭反覆碾過敏感點",
+    "穴被完全填滿，抽插節奏又重又快"
+  ]));
+  if(has("後穴")) partDesc.push(rnd([
+    "一人從後方進入後穴，緩慢卻用力地整根沒入",
+    "後穴被撐開，每一次抽出都帶著潤滑的水聲",
+    "有人專攻你的後穴，抽送又深又密"
+  ]));
+  if(has("胸")) partDesc.push(rnd([
+    "有人用力揉捏你的乳房，指尖夾住乳頭又拉又轉",
+    "胸部被雙手固定，乳頭被含住吸吮",
+    "有人把性器夾在你雙乳之間抽送"
+  ]));
+  if(has("左手")||has("右手")){
+    const hand=has("左手")&&has("右手")?"雙手":(has("左手")?"左手":"右手");
+    partDesc.push(rnd([
+      `你的${hand}被強迫握住性器上下套弄`,
+      `有人抓著你的${hand}，讓你替他手淫`,
+      `${hand}被按在滾燙的性器上，被迫快速套弄`
+    ]));
+  }
+
+  // 體位描述
+  const posDesc={
+    "躺下":rnd([
+      "你被壓在地上仰躺，雙腿被分開固定",
+      "你平躺著，身體完全敞開任人使用",
+      "仰躺的姿勢讓每一個進入都進到最深"
+    ]),
+    "趴下":rnd([
+      "你被按成趴姿，臀部高高抬起",
+      "趴在地上的姿勢讓後方的人能整根沒入",
+      "你趴著，臉貼著地面，只能承受從後方來的撞擊"
+    ]),
+    "站立":rnd([
+      "你被抵在牆上站著，雙腿微微分開",
+      "站立的姿勢讓重力加重每一次的進入",
+      "你被從後面抱住，雙腳幾乎離地"
+    ]),
+    "跪姿":rnd([
+      "你跪在地上，身體前傾或後仰配合",
+      "跪姿讓口腔與下身都能被同時使用",
+      "你跪著，雙手撐地，任由他們調整角度"
+    ]),
+    "坐著上位":rnd([
+      "你被放在對方身上騎乘，主動或被強迫上下",
+      "坐著的姿勢讓穴被整根吞入，重力讓每一次都更深",
+      "你跨坐在一人身上，其他人也從旁加入"
+    ])
+  };
+
+  // 人數差分開頭
+  let head="";
+  if(n===2) head=rnd([`兩人同時使用你。`,`兩名男人把你夾在中間。`,`兩人分工明確地侵犯你。`]);
+  else if(n===3) head=rnd([`三人把你包圍。`,`三名男人同時動手。`,`你被三個人一起使用。`]);
+  else head=rnd([`四個人把你完全佔有。`,`四名男人輪流或同時進入你。`,`你被四個人當成共用的肉便器。`]);
+
+  // 組合文本
+  let body=`目前體位：${position}。${posDesc[position]||""}`;
+  if(partDesc.length) body+=` ${partDesc.join("；")}。`;
+  body+=` 被使用的部位：${partStr}。`;
+
+  // 強度差分
+  const intensText=[
+    "動作還算克制，但已經完全不把你當人看。",
+    "節奏明顯加快，肉體拍打聲與水聲混在一起。",
+    "他們開始配合著彼此的節奏，前後夾擊讓你幾乎無法呼吸。",
+    "抽送變得又深又狠，每一次都像要把你釘在原地。",
+    "接近高潮的男人動作失控，其他人則故意放慢研磨敏感點，雙重刺激讓你眼前發白。"
+  ];
+  body+=" "+intensText[Math.min(intens,intensText.length-1)];
+
+  if(toyPlay) body+=" "+toyPlay;
+
+  // 沉淪度高時多一句回味感
+  if(S.corruption>=60) body+=" "+rnd([
+    "你的身體已經誠實地回應了這些刺激。",
+    "穴口不由自主地收縮，像是在挽留。",
+    "即便意識還在抗拒，下半身卻越夾越緊。"
+  ]);
+
+  return head+" "+body;
+}
+
+function startSex(locId,locName,isTrain=false,isMulti=false,people=null){
+  if(!isTrain) setLastAreaByLoc(locId);
+  S.flags.currentLoc=locId; S.flags.currentLocName=locName;
+  const ppl=people??getLocPeople(locId);
+  const actor=getActor(locId);
+  const n=isMulti?2+Math.floor(Math.random()*3):1;
+  S.flags.evt={
+    type:isMulti?"multi":"single",
+    stage:0,actor,n,
+    shotsLeft:n*(2+Math.floor(Math.random()*2)),
+    intensity:0,locId,locName,isTrain,people:ppl,
+    hole:rnd(["pussy","ass","mouth"]),
+    // 多人用：本階段部位與體位（每次 continue 重新抽）
+    currentParts:null, currentPos:null
+  };
+  return renderEvtChoice();
+}
+function renderEvtChoice(){
+  const e=S.flags.evt;
+  if(!e) return {title:"錯誤",text:["事件狀態異常"],links:[{label:"返回",go:"hub"}]};
+  let title="",text=[];
+  const feel=getExposureFeel(e.people||0);
+  const nakedTag=e.nakedEvent?"裸露・":"";
+  if(e.type==="harass"){
+    title=(e.isTrain?"電車內・":"")+nakedTag+"性騷擾・進行中";
+    if(e.stage===0){
+      if(e.nakedEvent){
+        text=[e.action]; // 已含完整裸露開場
+      } else {
+        text=[`在${e.locName}（附近約有 ${e.people} 人），${e.actor}突然靠近你。`,e.action];
+      }
+      const mock=getToyMock();if(mock)text.push(mock);if(feel)text.push(feel);text.push("你必須立刻做出反應。");
+    } else text=[getHarassContinueText(e)];
+  } else {
+    title=(e.isTrain?"電車內・":"")+nakedTag+(e.type==="multi"?"多人使用":"被單人使用")+"・進行中";
+    if(e.stage===0){text=[getSexStartText(e)];const mock=getToyMock();if(mock)text.push(mock);if(feel)text.push(feel);}
+    else text=[getSexContinueText(e)];
+  }
+  const canAccept=S.corruption>=50||S.arousal>=50;
+  const links=[{label:"反抗",go:"evt_resist"},{label:"忍受",go:"evt_endure"}];
+  if(canAccept) links.push({label:"欣然接受",go:"evt_accept"});
+  else links.push({label:"欣然接受（需沉淪或興奮≥50）",go:"#",disabled:true});
+  return {title,text,links};
+}
+function getHarassContinueText(e){
+  const toyPlay=getToyPlay();
+  // 裸露事件：使用專屬延續文本
+  if(e.nakedEvent){
+    const level=e.nakedLevel||getNakedLevel();
+    const nakedContinues=level==="full"?[
+      `${e.actor}用手掌整個包住你裸露的乳房用力揉捏，另一只手直接插進完全敞開的小穴裡快速抽插。「全身脫光還敢站在這裡，不就是等著被這樣摸？」${toyPlay||""}`,
+      `他強迫你轉過身，從後面用手指同時玩弄你的穴與後穴，胸部被空氣與他的另一只手交替刺激。「全裸的樣子真好看，讓人想直接在這裡幹。」`,
+      `他拿出性器，在你完全裸露的大腿與小腹上摩擦，龜頭偶爾頂到陰蒂。「這麼敞開，連遮都不用遮了。」`,
+      `他抓著你的手強迫你握住他的性器，同時自己的手指深深埋在你裸露的穴裡攪動。「自己脫光的後果，就好好嚐嚐。」`
+    ]:(level==="partial"?[
+      `${e.actor}的手毫不客氣地往你暴露的部位探去，用力揉捏或抽插。「穿成這樣還敢在外面晃，就是想被教訓。」${toyPlay||""}`,
+      `他盯著你沒遮好的地方，手指直接侵入。「這裡都露出來了，還裝什麼？」`,
+      `他低聲笑著，動作越來越過分，專門針對你裸露的肌膚與穴口刺激。「下次記得穿好再出門……或者繼續這樣也好。」`
+    ]:[
+      `${e.actor}動作變得更大膽，手指與手掌不斷侵犯你。${toyPlay||""}`
+    ]);
+    return nakedContinues[Math.min(e.intensity,nakedContinues.length-1)];
+  }
+  // 一般騷擾鏈
+  const prevKey=e.actionKey||"finger_pussy";
+  const chain=HARASS_CHAIN[prevKey];
+  let nextKey;
+  if(chain&&chain.next&&chain.next.length){
+    nextKey=rnd(chain.next);
+  } else {
+    nextKey=rnd(HARASS_START_KEYS);
+  }
+  e.actionKey=nextKey;
+  const base=HARASS_CHAIN[nextKey]?HARASS_CHAIN[nextKey].text:HARASS_CHAIN.finger_pussy.text;
+  const prefix=rnd([
+    `${e.actor}見你沒有強烈反抗，動作變得更大膽。`,
+    `他低聲笑了笑，繼續加碼。`,
+    `他沒有給你喘息的機會。`,
+    `「原來這麼乖。」他邊說邊換了動作。`
+  ]);
+  return `${prefix}${base}${toyPlay||""}`;
+}
+function getSexStartText(e){
+  // 裸露事件優先使用專屬開場
+  if(e.nakedEvent&&e.nakedOpen) return e.nakedOpen+"\n你必須立刻決定要如何應對。";
+  if(e.type==="multi"){
+    const n=e.n||2;
+    if(e.isTrain) return `車廂搖晃中，${n}名男人同時靠近你。有人從背後扣住你的腰，有人已經把手伸進裙子裡。\n「別出聲。」其中一人低聲說，隨後就著晃動把性器抵了進來。\n你必須立刻決定要如何應對。`;
+    return `在${e.locName}（附近約有 ${e.people} 人），${n}名男人把你圍住。\n「別喊。」帶頭的人已經解開褲子，其他人則抓住你的手臂與腰。\n你必須立刻決定要如何應對。`;
+  }
+  if(e.isTrain) return `車廂搖晃中，${e.actor}從背後緊貼你，一只手扣住你的腰，另一只手把裙子掀到腰際。\n「忍著。」他低聲說，隨後就著晃動把性器頂了進來。\n你必須立刻決定要如何應對。`;
+  return `在${e.locName}（附近約有 ${e.people} 人），${e.actor}一把將你拉到角落。\n「別喊。」他已經解開褲子，強迫你轉過身，性器抵在入口。\n你必須立刻決定要如何應對。`;
+}
+function getSexContinueText(e){
+  const toyPlay=getToyPlay();
+  // 裸露被操：加入暴露強調
+  if(e.nakedEvent&&e.type!=="multi"){
+    const holeName={pussy:"穴",ass:"後穴",mouth:"嘴"}[e.hole]||"體內";
+    const level=e.nakedLevel||"partial";
+    const nakedSex=[
+      `${e.actor}在你完全${level==="full"?"赤裸":"暴露"}的身體上長驅直入，進入你的${holeName}。沒有衣物阻隔，每一次抽送的肉體拍打聲都異常清晰。他一邊幹一邊揉你裸露的胸部。${toyPlay||""}`,
+      `他故意把你轉到可能被人看見的角度，加快抽送。「讓他們看看你被幹的樣子。」龜頭反覆碾過敏感點，你的乳頭在空氣中硬得發疼。`,
+      `他抓著你的腰往自己身上按。因為衣物所剩無幾，肌膚完全貼合，每一次撞擊都讓你整個人晃動。手指還伸到前方撥弄陰蒂。`,
+      `他接近高潮，抽送又快又狠。最後深深埋進去射了出來，精液沿著你裸露的大腿往下淌。他低聲說：「穿成這樣，就是等這個吧。」`,
+      `他射完後沒有立刻軟掉，繼續在你體內研磨，雙手不停玩弄你暴露在外的乳頭與陰蒂。「還早，繼續。」`
+    ];
+    return nakedSex[Math.min(e.intensity,nakedSex.length-1)];
+  }
+  // 多人：每階段重新判定插入人數 → 分配部位 → 過濾體位 → 產生文本
+  if(e.type==="multi"){
+    const insertCount=decideInsertCount(e.n||2);
+    const parts=assignParts(insertCount);
+    const possible=getPossiblePositions(parts);
+    const position=rnd(possible);
+    e.currentParts=parts;
+    e.currentPos=position;
+    let text=generateMultiStageText(e, parts, position);
+    if(e.nakedEvent) text+=" "+rnd(["你幾乎沒有衣物遮擋，每一次被進入都被看得一清二楚。","裸露的身體讓他們更加興奮，動作也更不加掩飾。"]);
+    return text;
+  }
+  // 單人一般邏輯
+  const holeName={pussy:"穴",ass:"後穴",mouth:"嘴"}[e.hole]||"體內";
+  const texts=[`${e.actor}已經完全進入你的${holeName}。他先是緩慢抽送，接著忽然加快，每一下都又重又深。空著的手揉捏你的胸部，指尖夾住乳頭用力拉扯。${toyPlay||""}`,`他故意放慢速度，只在入口處淺淺抽送，龜頭反覆碾過最敏感的地方，然後又突然整根沒入，開始密集衝刺。`,`他抓著你的腰往自己身上按。每一次撞擊都帶著肉體拍打聲。他的手指還伸到前方快速撥弄陰蒂。`,`他接近高潮，抽送變得又快又狠。最後深深埋進去射了出來，卻沒有立刻抽出，低聲說：「還沒完。」`,`他射完一次後並沒有軟掉，而是繼續小幅度地在你體內研磨，同時用手玩弄你的乳頭與陰蒂，準備下一輪。`];
+  return texts[Math.min(e.intensity,texts.length-1)];
+}
+function handleResist(){
+  const e=S.flags.evt; const isSex=e.type==="single"||e.type==="multi";
+  spendEnergy(isSex?14:9); if(!e.isTrain) setLastAreaByLoc(e.locId);
+  if(chance(isSex?0.30:0.50)){
+    S.flags.evt=null;
+    if(e.isTrain) return {title:"反抗成功",text:["你用力推開對方，趁他錯愕時整理好衣服。","列車繼續行駛，你總算撐到了目的地。"],onEnter:()=>fx({arousal:4},[],`${S.heroine}心跳加速，手還在發抖。`),links:[{label:"抵達目的地",go:"arrive_dest"}]};
+    return {title:"反抗成功",text:["你用力推開對方，趁他錯愕時整理好衣服。","你快速拉開距離。"],onEnter:()=>fx({arousal:4},[],`${S.heroine}心跳加速，手還在發抖。`),links:[{label:"接下來",go:"stay_loc"}]};
+  } else {
+    e.stage++;e.intensity++;
+    return {title:"反抗失敗",text:["你的反抗被輕易壓制。對方低聲笑了笑，動作反而更過分。",e.type==="harass"?getHarassContinueText(e):getSexContinueText(e)],onEnter:()=>fx({corruption:3,arousal:6},[{stat:"沉淪度",text:"反抗失敗後被更用力地對待，無力感加深。"}]),links:[{label:"繼續……",go:"evt_continue"}]};
+  }
+}
+function handleEndure(){
+  const e=S.flags.evt; const isSex=e.type==="single"||e.type==="multi";
+  spendEnergy(isSex?10:5); if(!e.isTrain) setLastAreaByLoc(e.locId);
+  e.stage++;e.intensity++; if(chance(0.3)) e.shotsLeft--;
+  if(e.shotsLeft<=0) return finishEvt(e,"endure");
+  return {title:"你選擇忍受",text:["你沒有反抗，只是咬著牙承受。",e.type==="harass"?getHarassContinueText(e):getSexContinueText(e)],onEnter:()=>fx({corruption:4,arousal:7},[{stat:"沉淪度",text:"選擇忍受讓身體逐漸習慣被這樣對待。"},{stat:"興奮度",text:"強制的刺激仍讓身體產生反應。"}]),links:[{label:"事件繼續……",go:"evt_continue"}]};
+}
+function handleAccept(){
+  const e=S.flags.evt; if(!e.isTrain) setLastAreaByLoc(e.locId);
+  e.stage++;e.intensity++; if(chance(0.25)) e.shotsLeft--;
+  if(e.shotsLeft<=0) return finishEvt(e,"accept");
+  return {title:"你選擇接受",text:["你沒有推開他，甚至主動配合了一些動作。",e.type==="harass"?getHarassContinueText(e):getSexContinueText(e)],onEnter:()=>fx({corruption:6,arousal:10},[{stat:"沉淪度",text:"主動接受讓心理防線進一步鬆動。"},{stat:"興奮度",text:"身體誠實地回應了刺激。"}]),links:[{label:"事件繼續……",go:"evt_continue"}]};
+}
+function finishEvt(e,choice){
+  if(!e.isTrain) setLastAreaByLoc(e.locId);
+  const film=chance(e.isTrain?0.9:0.7); const witness=chance(S.know/100); const isSex=e.type==="single"||e.type==="multi"; const ppl=e.people||1;
+  let endReaction="";
+  if(e.type==="harass") endReaction=rnd([`${e.actor}抽出手指，在你面前晃了晃上面的體液，低笑：「這麼濕，回去記得洗乾淨。」`,`他拍了拍你的臀部，語氣輕蔑：「下次再讓我碰到，可就不只是用手了。」`,`他強迫你含住剛才侵犯你的手指，然後才鬆開手：「味道記住了嗎？」`]);
+  else {const where=rnd(["射在你體內","射在你的大腿上","射在你的小腹上","射在你臉上","射在你嘴裡"]); endReaction=rnd([`${e.actor}在最後關頭${where}，然後拍了拍你的臉：「夾得不錯，下次再來。」`,`他深深埋進去，${where}後才慢慢抽出。精液順著你的大腿往下淌。他低聲說：「記得夾緊，別滴到地上。」`,`他射完後並沒有立刻離開，而是用手指把溢出來的精液重新塞回你體內，笑著說：「浪費就不好了。」`]);}
+  const baseFame=film?2:1; const fameGain=Math.max(1,Math.round(baseFame*(1+ppl/5)));
+  let ch={exposure:ppl},exp=[];
+  if(e.type==="harass"){ch.harass=1;ch.know=film?2:1;ch.arousal=5;ch.fame=fameGain;exp=[{stat:"沉淪度",text:"這次騷擾結束後，身體對被觸碰的記憶又加深了一層。"},{stat:"露出經驗",text:`在約 ${ppl} 人可能看見的環境下被侵犯，露出經驗增加。`}];}
+  else {ch.people=e.n||1;ch.know=film?3:1;ch.corruption=6;ch.arousal=8;ch.fame=fameGain;if(e.hole==="pussy")ch.pussy=2;else if(e.hole==="ass")ch.ass=1;else ch.mouth=1;if(e.type==="multi"){ch.mouth=(ch.mouth||0)+1;ch.pussy=(ch.pussy||0)+1;ch.ass=(ch.ass||0)+1}exp=[{stat:"沉淪度",text:"被使用到對方滿意為止，讓你清楚感覺到自己正在被當成物品。"},{stat:"露出經驗",text:`在約 ${ppl} 人可能看見的環境下被使用，露出經驗增加。`}];}
+  if(film) exp.push({stat:"知情度",text:"過程被拍攝記錄的機率很高。"});
+  if(witness){ch.know=10;ch.yield=10;exp.push({stat:"知情度",text:`${S.bfName}親眼看見了這一切。`},{stat:"屈服度",text:`${S.bfName}的內心受到強烈衝擊。`});S.flags.witnessPending=getWitnessThoughts(isSex);}
+  S.flags.evt=null;
+  const nextGo=e.isTrain?"arrive_dest":"stay_loc";
+  const aftermath=getAftermathText(choice);
+  const result={title:"事件結束",text:[endReaction,aftermath,e.isTrain?"列車繼續行駛，你總算到達了原本要去的地方。":"",witness?`${S.bfName}就在能看見的距離，把整段過程看完了。`:""].filter(Boolean),onEnter:()=>fx(ch,exp,`${S.heroine}整理好衣服後，仍能感覺到身體各處被過度刺激後的餘韻。`),links:witness?[{label:"……",go:"witness_view"}]:[{label:e.isTrain?"抵達目的地":"接下來",go:nextGo}]};
+  if(witness) S.flags.afterWitness=nextGo;
+  return result;
+}
+
+/* ========== 露出系統（含發現人數） ========== */
+function startExposure(locId,locName){
+  const ppl=getLocPeople(locId);
+  S.flags.currentLoc=locId; S.flags.currentLocName=locName;
+  // 露出狀態同步目前即時衣著（已脫的維持脫著）
+  S.flags.expo={
+    active:true,
+    top:S.clothes.top, bottom:S.clothes.bottom,
+    bra:S.clothes.bra, panty:S.clothes.panty,
+    discover:0,found:0,locId,locName,people:ppl
+  };
+  return {title:"野外露出・準備",text:[`你來到${locName}（附近約有 ${ppl} 人）。`,"心跳開始加速。你決定在這裡進行露出。","請選擇要脫下的衣物（可多次選擇）："],links:buildExpoClothesLinks()};
+}
+function buildExpoClothesLinks(){
+  const e=S.flags.expo; const links=[];
+  if(e.top) links.push({label:"脫掉上衣",go:"expo_strip",part:"top"});
+  if(e.bottom) links.push({label:"脫掉下衣",go:"expo_strip",part:"bottom"});
+  if(e.bra) links.push({label:"脫掉內衣",go:"expo_strip",part:"bra"});
+  if(e.panty) links.push({label:"脫掉內褲",go:"expo_strip",part:"panty"});
+  if(!e.top&&!e.bottom&&!e.bra&&!e.panty) links.push({label:"開始露出行為",go:"expo_act"});
+  else links.push({label:"以目前狀態開始露出",go:"expo_act"});
+  links.push({label:"取消，結束露出（維持目前衣著）",go:"expo_end"});
+  return links;
+}
+function expoStrip(part){
+  const e=S.flags.expo;
+  let text="";
+  if(part==="top"){
+    e.top=false; S.clothes.top=false;
+    if(S.clothes.bra){
+      const braStyle=rnd(["淺色蕾絲","黑色薄紗","簡單的棉質","帶有小蝴蝶結的粉色","半透明的白色"]);
+      text=`你把上衣拉過頭頂。今天穿的是${braStyle}內衣，布料下的乳溝與肩帶線條立刻暴露在空氣中。涼意貼上鎖骨與胸口，你感到一陣緊張，乳尖卻在薄薄的布料下慢慢挺立。`;
+    } else {
+      text=`你把上衣拉過頭頂。因為今天沒穿內衣，胸部直接完全暴露——乳尖碰到空氣的瞬間就硬了起來，隨著呼吸微微起伏。你現在是上空狀態，任何視線都能直接看見你的乳房。`;
+    }
+  } else if(part==="bottom"){
+    e.bottom=false; S.clothes.bottom=false;
+    if(S.clothes.panty){
+      const pantyStyle=rnd(["小巧的三角褲","蕾絲丁字褲","普通的棉質內褲","半透明的薄紗","顏色偏深的運動風"]);
+      text=`你把下衣褪到腳踝再完全脫下。今天穿的是${pantyStyle}，布料覆蓋的範圍很小，大腿根與臀線幾乎都露在外面。涼風從腿間吹過，讓你輕輕顫抖。`;
+    } else {
+      text=`你把下衣褪到腳踝再完全脫下。因為今天沒穿內褲，私處直接接觸空氣——陰唇與陰蒂毫無遮擋，隨著步伐與呼吸微微開合。你現在下身完全赤裸。`;
+    }
+  } else if(part==="bra"){
+    e.bra=false; S.clothes.bra=false;
+    if(S.clothes.top){
+      text=`你在上衣底下解開內衣，把它抽出來。雖然還穿著上衣，但胸部已經沒有任何支撐，乳尖隔著布料摩擦，每一次動作都帶來明顯的刺激。`;
+    } else {
+      text=`你解開內衣，讓胸部完全暴露在空氣中。乳頭因為溫度差而迅速挺立，乳暈的顏色在光線下顯得格外清晰。你現在是真正的上空。`;
+    }
+  } else if(part==="panty"){
+    e.panty=false; S.clothes.panty=false;
+    if(S.clothes.bottom){
+      text=`你在下衣底下把內褲褪下抽走。雖然外面還穿著下衣，但私處已經完全沒有阻隔，布料直接摩擦著陰唇與陰蒂，感覺異常敏感。`;
+    } else {
+      text=`你把內褲褪下。私處直接接觸空氣的感覺讓你輕輕顫抖，陰蒂與穴口都暴露無遺，涼意與被看見的意識同時湧上。`;
+    }
+  } else {
+    text="你脫下一件衣物。";
+  }
+  const feel=getExposureFeel(e.people);
+  return {title:"脫衣中",text:[text,feel].filter(Boolean),onEnter:()=>fx({arousal:3,exposure:1}),links:buildExpoClothesLinks()};
+}
+function expoActMenu(){
+  const e=S.flags.expo; const status=[];
+  if(!e.top) status.push("上衣已脫"); if(!e.bottom) status.push("下衣已脫"); if(!e.bra) status.push("內衣已脫"); if(!e.panty) status.push("內褲已脫");
+  if(!e.top&&!e.bottom&&!e.bra&&!e.panty) status.push("全身赤裸");
+  const feel=getExposureFeel(e.people);
+  const foundText=getFoundPeopleText();
+  return {
+    title:"露出行為",
+    text:[
+      `地點：${e.locName}（當地約 ${e.people} 人）`,
+      `目前狀態：${status.join("、")||"仍穿著衣物"}`,
+      `被發現值：${e.discover.toFixed(1)}　｜　發現人數：${e.found} / ${e.people}`,
+      foundText,
+      feel,
+      "要做什麼？"
+    ].filter(Boolean),
+    links:[
+      {label:"待在原地（被發現值 +1）",go:"expo_do",act:"stay"},
+      {label:"遊蕩（被發現值 +1.5）",go:"expo_do",act:"wander"},
+      {label:"自慰（被發現值 +2）",go:"expo_do",act:"mast"},
+      {label:"結束露出（維持目前衣著）",go:"expo_end"}
+    ]
+  };
+}
+function expoDo(act){
+  const e=S.flags.expo; let add=1,desc="";
+  if(act==="stay"){add=1;desc=rnd(["你站在原地，讓空氣與可能的視線落在自己身上。肌膚上的每一寸都感覺異常敏感，心跳聲在耳裡放大。","你強迫自己不要遮擋。涼風吹過乳頭與私處，讓你輕輕發抖，卻沒有移開。"]);}
+  else if(act==="wander"){add=1.5;desc=rnd(["你開始緩慢走動。每一步都讓胸部輕微晃動，私處隨著步伐開合，空氣不斷摩擦過濕潤的地方。","你沿著邊緣走了一段。偶爾有腳步聲靠近，你的呼吸就會瞬間屏住，卻還是沒有把身體藏起來。"]);}
+  else {add=2;desc=rnd(["你把手伸向自己的私處，在可能被人看見的地方開始摩擦陰蒂。快感與被發現的恐懼同時湧上，讓你的動作又急又抖。","你靠著附近的物體，雙腿分開，手指探入自己的穴裡抽送。發出的水聲在安靜的環境裡顯得格外清晰。"]);}
+  e.discover+=add;
+
+  // 發現人數累加：每次行動有機會增加 1~2 人，但不超過當地人數
+  const maxFound=e.people;
+  if(e.found<maxFound && chance(0.55+add*0.1)){
+    const inc=Math.min(maxFound-e.found, 1+Math.floor(Math.random()*2));
+    e.found+=inc;
+  }
+
+  const feel=getExposureFeel(e.people);
+  const foundText=getFoundPeopleText();
+  const discoverChance=Math.min(0.95, e.discover*0.20);
+
+  // 判定是否被「抓個正著」（有人上前動手）
+  if(chance(discoverChance)){
+    return {
+      title:"被發現了",
+      text:[desc,foundText,feel,"忽然，有人明顯停下來，並且朝你走了過來——"].filter(Boolean),
+      onEnter:()=>fx({arousal:8,exposure:2,corruption:2}),
+      links:[{label:"……",go:"expo_caught"}]
+    };
+  }
+
+  return {
+    title:"露出中",
+    text:[
+      desc,
+      foundText,
+      feel,
+      `被發現值升至 ${e.discover.toFixed(1)}（被抓正著機率約 ${Math.round(discoverChance*100)}%）　｜　目前發現人數 ${e.found}/${e.people}`
+    ].filter(Boolean),
+    onEnter:()=>fx({arousal:act==="mast"?10:5,exposure:1}),
+    links:[{label:"繼續",go:"expo_act"}]
+  };
+}
+function expoCaught(){
+  const e=S.flags.expo; const ppl=e.people||1; const found=e.found||1; const actor=getActor(e.locId); let text=[];
+  const label=LOC_CROWD_LABEL[e.locId]||"路人";
+
+  if(found>=2 || ppl>=2){
+    text.push(`已經有 ${Math.max(found,2)} 名【${label}】圍過來。視線像實質的手，一寸寸刮過你的胸部、腰腹與腿間。`);
+    text.push(rnd([
+      "有人吹了聲口哨，有人直接拿出手機。沒有人上前幫你，反而有人低聲笑著說：「自己脫光在這站著，不就是想被看嗎？」",
+      "圍觀的人越來越多。有人故意走得更近，目光毫不掩飾地刮過你的乳尖與私處。你能感覺到自己的乳頭在眾人注視下硬得發疼。",
+      "「看啊，全裸。」有人用很輕的聲音說，卻足以讓你聽見。視線像無數雙手在撫摸你，你卻已經無法把衣服穿回去。"
+    ]));
+  } else {
+    text.push(`那名【${label}】已經把你看光了。他的視線毫不掩飾地停留在你的胸部與下身。`);
+  }
+
+  text.push(`${actor}走上前，語氣帶著明顯的嘲笑：「在這種地方脫光？看來是故意的。」`);
+  text.push(rnd([
+    "他伸手直接揉上你的胸部，指尖夾住乳頭用力拉扯。「既然自己送上門，就別後悔。」",
+    "他的手往下探，毫不客氣地插入你的穴裡攪動。「都濕成這樣了，還裝什麼？」",
+    "他繞到你身後，一只手扣住你的腰，另一只手已經在解自己的褲子。「這麼想被看，那就讓他們看清楚你被幹的樣子。」"
+  ]));
+
+  S.flags.expo.active=false;
+  // 發現人數也會影響後續被操時的人數感
+  const usePeople=Math.max(found, ppl);
+  if(chance(0.6)) return startSex(e.locId,e.locName,false,found>=3,usePeople);
+  return startHarass(e.locId,e.locName,false,usePeople);
+}
+function expoEnd(){
+  S.flags.expo.active=false; S.flags.expo.discover=0; S.flags.expo.found=0;
+  // 不再強制穿回衣服——衣著狀態持續，可在原地選單選擇穿回
+  const still=[];
+  if(!S.clothes.top) still.push("上衣");
+  if(!S.clothes.bottom) still.push("下衣");
+  if(!S.clothes.bra) still.push("內衣");
+  if(!S.clothes.panty) still.push("內褲");
+  const stillText=still.length?`你仍保持著目前的衣著狀態（未穿回：${still.join("、")}）。若要穿回，可在接下來的選項中選擇。`:"你結束了露出行為。";
+  return {title:"結束露出",text:[stillText,"肌膚上還殘留著被空氣與視線觸碰過的感覺。"],onEnter:()=>fx({arousal:-3,exposure:1},[],`${S.heroine}結束露出後，心跳還沒完全平復。`),links:[{label:"接下來",go:"stay_loc"}]};
+}
+
+function putClothesOn(part){
+  const names={top:"上衣",bottom:"下衣",bra:"內衣",panty:"內褲"};
+  if(part==="top") S.clothes.top=true;
+  if(part==="bottom") S.clothes.bottom=true;
+  if(part==="bra") S.clothes.bra=true;
+  if(part==="panty") S.clothes.panty=true;
+  // 同步 expo 狀態（若正在露出中）
+  if(S.flags.expo){
+    if(part==="top") S.flags.expo.top=true;
+    if(part==="bottom") S.flags.expo.bottom=true;
+    if(part==="bra") S.flags.expo.bra=true;
+    if(part==="panty") S.flags.expo.panty=true;
+  }
+  const text=rnd([
+    `你把${names[part]||"衣物"}重新穿上。布料貼回肌膚的感覺讓你稍微安心了一些，但剛才暴露的記憶仍清晰留著。`,
+    `你迅速穿回${names[part]||"衣物"}。心跳還是有點快，檢查了一下周圍，確認沒有人特別注意後才鬆了口氣。`
+  ]);
+  return {title:"穿回衣物",text:[text],onEnter:()=>fx({arousal:-4}),links:[{label:"接下來",go:"stay_loc"}]};
+}
+
+/** 裸露狀態加成機率：全裸 40%，上空或下空 20% */
+function getNakedHarassBonus(){
+  const level=getNakedLevel();
+  if(level==="full") return 0.40;
+  if(level==="partial") return 0.20;
+  return 0;
+}
+
+/**
+ * 裸露騷擾／被操事件
+ * - 依衣著狀態產生專屬文本
+ * - 隨機決定是騷擾向或被操向
+ * - 使用既有 evt 流程（反抗／忍受／接受）
+ */
+function startNakedHarass(locId,locName,isTrain=false,people=null){
+  if(!isTrain) setLastAreaByLoc(locId);
+  S.flags.currentLoc=locId; S.flags.currentLocName=locName;
+  const ppl=people??getLocPeople(locId);
+  const actor=getActor(locId);
+  const c=S.clothes;
+  const level=getNakedLevel();
+  // 50% 被操向，50% 騷擾向
+  const asSex=chance(0.5);
+  const isMulti=asSex&&chance(0.35);
+
+  // ----- 依衣著產生開場文本 -----
+  let open="";
+  if(level==="full"){
+    open=rnd([
+      `${actor}看見你全身赤裸地站在${locName}，眼睛瞬間亮了起來。「操，居然敢全裸走在這種地方？」他大步走過來，目光毫不掩飾地刮過你的乳尖與小穴。`,
+      `有人從後面靠近。${actor}低聲笑：「全身脫光還敢在這裡晃？小穴都露在外面，是在等人幹吧。」他的手已經伸向你完全裸露的身體。`,
+      `${actor}把你攔下，視線在你赤裸的胸部與腿間來回。「全裸出現在${locName}……你這是在邀請誰？」`
+    ]);
+  } else if(!c.bottom&&!c.panty){
+    open=rnd([
+      `${actor}的視線直接鎖在你下身。「居然敢在${locName}脫到看得到小穴？該教訓你這個婊子。」他已經伸手過來。`,
+      `「下身什麼都不穿就走出來？」${actor}逼近你，手指幾乎要碰到你裸露的陰唇。「自己送上門的肉便器嗎？」`,
+      `${actor}盯著你完全暴露的私處，喉結滾動。「在這種地方把小穴露出來……看來是想被碰。」`
+    ]);
+  } else if(!c.top&&!c.bra){
+    open=rnd([
+      `${actor}的目光黏在你裸露的胸部。「上空就敢出來晃？乳頭都硬了，還裝什麼。」他伸手就要揉。`,
+      `「胸部全露著還在${locName}走？」${actor}靠近，手指已經碰到你的乳尖。「這麼想被看，那就讓人好好用。」`,
+      `${actor}低笑：「不穿內衣也不穿上衣？這對奶子是專門給人揉的吧。」`
+    ]);
+  } else if(!c.panty||!c.bottom){
+    open=rnd([
+      `${actor}似乎發現了你沒穿內褲。「下面空著？故意的吧。」他的手往裙底探。`,
+      `有人從你衣物的縫隙看見了不該露的地方。${actor}靠近：「這裡都能看到……你很敢啊。」`
+    ]);
+  } else {
+    open=rnd([
+      `${actor}注意到你衣著不整，眼睛一亮，直接靠了過來。`,
+      `「穿成這樣還在外面晃？」${actor}的手已經不安分。`
+    ]);
+  }
+
+  if(asSex){
+    const n=isMulti?2+Math.floor(Math.random()*2):1;
+    // 被操向開場再補一句
+    const sexExtra=level==="full"
+      ? rnd(["他二話不說就把你按住，性器抵上你完全敞開的入口。","「既然自己脫光，就別怪我不客氣。」他已經解開褲子。"])
+      : rnd(["他強迫你轉過身，性器頂了上來。","「這種身體不幹一頓太可惜。」他已經開始動作。"]);
+    S.flags.evt={
+      type:isMulti?"multi":"single",
+      stage:0,actor,n,
+      shotsLeft:n*(2+Math.floor(Math.random()*2)),
+      intensity:0,locId,locName,isTrain,people:ppl,
+      hole:rnd(["pussy","ass","mouth"]),
+      currentParts:null,currentPos:null,
+      nakedEvent:true, nakedLevel:level
+    };
+    // 把裸露開場寫進第一段（stage 0 會用 getSexStartText，我們改用自訂）
+    S.flags.evt.nakedOpen=open+" "+sexExtra;
+    return renderEvtChoice();
+  }
+
+  // 騷擾向
+  S.flags.evt={
+    type:"harass",stage:0,actor,
+    actionKey:"finger_pussy", action:open,
+    shotsLeft:2+Math.floor(Math.random()*3),
+    intensity:0,locId,locName,isTrain,people:ppl,
+    nakedEvent:true, nakedLevel:level
+  };
+  return renderEvtChoice();
+}
+
+function resolveLocation(locId,locName,isTrain=false){
+  if(S.flags.orgyDay) return orgyContinue();
+  if(currentEnergy()<=0) return {title:"體力耗盡",text:["你已經沒有力氣繼續了。"],links:[{label:"回家",go:"go_home"}]};
+  if(!isTrain){setLastAreaByLoc(locId); S.flags.currentLoc=locId; S.flags.currentLocName=locName;}
+
+  // 裸露騷擾：僅在「進入此地點的第一次判定」觸發，同一地點不重複 roll
+  const bonus=getNakedHarassBonus();
+  if(bonus>0 && !isTrain && S.flags.nakedCheckLoc!==locId){
+    S.flags.nakedCheckLoc=locId; // 標記已判定，避免同地點重複
+    if(chance(bonus)){
+      return startNakedHarass(locId,locName,isTrain);
+    }
+  }
+
+  const rates=calcRates(isTrain); const r=Math.random()*100; let acc=0;
+  if(rates.multi>0&&r<(acc+=rates.multi)) return startSex(locId,locName,isTrain,true);
+  if(rates.single>0&&r<(acc+=rates.single)) return startSex(locId,locName,isTrain,false);
+  if(rates.harass>0&&r<(acc+=rates.harass)) return startHarass(locId,locName,isTrain);
+  if(rates.peep>0&&r<(acc+=rates.peep)) return doPeep(locId,locName);
+  return stayAtLocation();
+}
+function doPeep(locId,locName){
+  setLastAreaByLoc(locId); S.flags.currentLoc=locId; S.flags.currentLocName=locName;
+  const actor=getActor(locId); const film=chance(0.7);
+  return {title:locName+"・被偷窺",text:[`你感覺到有視線。${actor}正躲在不遠處盯著你。`,film?"他的手機鏡頭對準了你。":"他只是靜靜地看著。"],onEnter:()=>{spendEnergy(3);fx({arousal:5,know:film?2:0,exposure:1},film?[{stat:"知情度",text:"偷拍影片有機會流傳。"}]:[],`${S.heroine}加快腳步離開，背後的視線讓她心跳加速。`)},links:[{label:"接下來",go:"stay_loc"}]};
+}
+function getOutsideDaily(locId){
+  const map={
+    convenience:rnd(["你走進便利商店，拿了一瓶水與飯糰。結帳時店員的視線在你身上停留了稍長的時間，你假裝沒注意到，快速付完錢離開。","你在貨架前徘徊，最後拿了一盒保險套與一瓶潤滑液。結帳時你把東西推到最前面，低頭不敢看店員的表情。","你買了飲料與零食，在店外的座位坐了一會兒。風吹過時裙子微微揚起，你下意識地按住裙擺。"]),
+    river:rnd(["你沿著河岸慢慢走，看著水面反射的陽光。有人慢跑經過，你能感覺到對方的視線在你背上停留。","你在長椅上坐了一會兒，吹著河風。遠處有人在釣魚，偶爾轉頭看你的方向。","你脫下鞋子，讓腳踩在岸邊的草地上。河水聲讓你稍微放鬆，但身體深處的感覺卻沒有完全消失。"]),
+    apartment:rnd(["你站在舊公寓的走廊，假裝在等人。有住戶進出時會多看你一眼，你只能低頭看手機。","你在公寓附近的自動販賣機買了飲料，靠著牆壁喝。這裡的空氣有點悶，讓你更容易感覺到體內的不適。","你在公寓門口的台階上坐了一會兒。有人從旁邊經過，腳步慢了下來，但最終還是走遠了。"]),
+    parking:rnd(["你在停車場的角落閒晃，看著一輛輛進出的車。有一隻橘貓從車底鑽出來，你蹲下來輕輕摸了摸它的頭。","你靠在一根柱子上發呆。附近有人在抽菸，煙味飄過來時，你能感覺到對方的視線。","你繞著停車場走了一圈，假裝在找車。混凝土的地面反射著陽光，熱氣讓你的呼吸變得有些急促。"])
+  };
+  return map[locId]||"你在這裡待了一會兒，沒有發生特別的事。";
+}
+function orgyStart(){return {title:"亂交日・開始",text:["今天你被當成公共的肉便器。"],links:[{label:"繼續當肉便器",go:"orgy_continue"}]}}
+function orgyContinue(){
+  S.flags.orgyCount=(S.flags.orgyCount||0)+1; const en=currentEnergy();
+  return {title:`亂交日・第 ${S.flags.orgyCount} 輪`,text:["又有人把你拉過去使用。前後同時被進入，乳頭與陰蒂也被不停刺激。"],onEnter:()=>{spendEnergy(11);fx({corruption:7,arousal:10,mouth:1,pussy:2,ass:1,people:2,know:2,exposure:3})},links:en<=12?[{label:"體力耗盡，結束",go:"orgy_end"}]:[{label:"繼續當肉便器",go:"orgy_continue"}]};
+}
+function orgyEnd(){S.flags.orgyDay=false;S.flags.orgyCount=0;return {title:"亂交日結束",text:["你終於被允許離開。"],links:[{label:"回家",go:"go_home"}]};}
+function homeDialogue(){
+  const k=S.know,y=S.yield;
+  if(k<=30&&y<50) return [`${S.bfName}做好晚餐，你們像平常一樣吃飯聊天。`];
+  if(k<=60&&y<50) return [`${S.bfName}聲音低沉：「今天又比較晚。」吃飯的氣氛沉默。`];
+  if(k>60&&y<100) return [`${S.bfName}壓低聲音：「我看到了。你在外面被別人碰。」他沒等你回答，只說「先吃飯」。`];
+  return [`${S.bfName}已經接受這一切。他讓你靠過來，低聲說「今天也辛苦了」。`];
+}
+function allLocationsDone(){return S.flags.usedCampus.length>=CAMPUS_LOCS.length&&S.flags.usedOut.length>=OUT_LOCS.length}
+
+const P={
+  setup:()=>({title:"設置",text:[],links:[]}),
+  morning:()=>{
+    S.arousal=0; S.energy=70;
+    S.toys={vibe:false,plug:false,dildo:false,chain:false,noBra:false,noPanty:false};
+    S.clothes={top:true,bottom:true,bra:true,panty:true};
+    S.flags.usedCampus=[];S.flags.usedOut=[];S.flags.orgyDay=false;S.flags.orgyCount=0;
+    S.flags.datedToday=false;S.flags.phase="day";S.flags.nightEnergy=0;S.flags.lastArea="campus";
+    S.flags.evt=null;S.flags.afterClimax=null;S.flags.witnessPending=null;S.flags.afterWitness=null;
+    S.flags.currentLoc=null;S.flags.currentLocName=null;S.flags.nakedCheckLoc=null;
+    S.flags.expo={active:false,top:true,bottom:true,bra:true,panty:true,discover:0,found:0,locId:null,locName:null,people:0};
+    updateOS();
+    return {title:`${WEEKDAYS[S.day]}早晨`,text:[S.day===0?`新的一週。你是${S.heroine}，男朋友是${S.bfName}。`:"新的一天。","體力已回復至 70，興奮度歸零。","請選擇今天要配戴的配件："],links:[{label:"確認並出門",go:"hub"}],isToySelect:true};
+  },
+  hub:()=>{
+    updateOS();
+    if(S.flags.orgyDay) return orgyContinue();
+    if(S.flags.evt) return renderEvtChoice();
+    if(S.arousal>=50) return P.climax();
+    const en=currentEnergy();
+    if(en<=0&&S.flags.phase!=="home") return {title:"體力耗盡",text:["你已經沒有力氣了。"],links:[{label:"回家",go:"go_home"}]};
+    const links=[];
+    if(S.flags.phase==="day"){
+      links.push({label:"進入校園",go:"campus_hub"});
+      links.push({label:"外出",go:"outside_select"});
+      if(S.fame>=50&&S.yield>=50&&!S.flags.datedToday) links.push({label:`與${S.bfName}約會`,go:"date"});
+      links.push({label:"直接回家",go:"go_home"});
+    } else if(S.flags.phase==="night"){
+      links.push({label:"繼續夜遊",go:"outside_select"});
+      links.push({label:"回家（結束今天）",go:"go_home"});
+    }
+    const arrangeText=S.yield>100?`${S.bfName}會主動安排你被使用。`:"";
+    return {title:`${WEEKDAYS[S.day]}・${SLOTS[S.slot]}（${S.flags.phase==="night"?"晚間":"日間"}）`,text:[`知名度 ${S.fame}　目前體力 ${en}　露出經驗 ${S.exposure}`,toyCount()?`今日配件數：${toyCount()}`:"今日未特別配戴配件。",arrangeText].filter(Boolean),links};
+  },
+  stay_loc:()=>stayAtLocation(),
+  witness_view:()=>{
+    const w=S.flags.witnessPending||{thought:"（無內容）",action:""};
+    S.flags.witnessPending=null; const next=S.flags.afterWitness||"stay_loc"; S.flags.afterWitness=null;
+    return {title:`${S.bfName}的視角`,text:[w.thought,"","【後續】",w.action],links:[{label:"……",go:next}]};
+  },
+  climax:()=>{
+    const desc=rnd(["突然之間，累積的刺激衝破了臨界點。你的雙腿一軟，眼前冒出白光。潮吹的液體不受控制地從穴口噴出，順著大腿往下淌，腳邊的地面很快濕了一小片。你咬著自己的手背，卻還是漏出破碎的呻吟。","高潮來得又急又猛。你的腹部劇烈收縮，膀胱也跟著失守，溫熱的尿液與愛液混在一起往外流。眼前一陣陣發黑，耳邊只剩下自己急促的呼吸聲。你只能扶著附近的東西，避免自己直接跪倒。","你的意識瞬間空白。身體不受控制地顫抖，陰蒂一抽一抽地跳動，穴口不停收縮，把體內殘留的東西往外擠。眼淚與口水混在一起，你已經顧不上自己現在的樣子有多狼狽。","強烈的快感從下腹炸開。你的膝蓋發軟，幾乎站不住。潮吹的水柱噴了好幾下，把裙子下擺都弄濕了。你能感覺到自己的表情完全失控，眼角滲出淚水，卻什麼都做不了，只能等這波餘韻慢慢過去。"]);
+    return {title:"高潮",text:["興奮度已達臨界點。",desc,"過了好一會兒，你才稍微回過神來。身體還在輕輕抽搐，雙腿之間一片泥濘。"],onEnter:()=>{spendEnergy(8);fx({corruption:5,arousal:-S.arousal},[{stat:"沉淪度",text:"在公共或半公開的場合高潮，讓羞恥與快感更深地綁在一起。"},{stat:"興奮度",text:"高潮後暫時釋放，興奮度歸零。"}],`${S.heroine}靠著牆壁或欄杆，大口喘息。`)},links:[{label:"稍微平復後繼續",go:"after_climax"}]};
+  },
+  after_climax:()=>{const ret=S.flags.afterClimax||"stay_loc";S.flags.afterClimax=null;return P[ret]?P[ret]():{title:"繼續",text:["你稍微平復後，繼續原本的行程。"],links:[{label:"接下來",go:ret}]};},
+  campus_hub:()=>{
+    if(S.flags.evt) return renderEvtChoice(); if(S.arousal>=50) return P.climax();
+    if(currentEnergy()<=0) return {title:"體力不足",text:["你太累了。"],links:[{label:"回家",go:"go_home"}]};
+    const used=S.flags.usedCampus||[]; const remain=CAMPUS_LOCS.filter(l=>!used.includes(l.id));
+    const links=remain.map(l=>({label:l.label,go:"enter_loc",loc:l.id}));
+    links.push({label:"去校外",go:"outside_select"}); links.push({label:"直接回家",go:"go_home"});
+    if(allLocationsDone()) return {title:"地點已走訪完畢",text:["今天能去的地方都去過了。"],links:[{label:"回家",go:"go_home"}]};
+    return {title:"校園",text:[used.length?`已去過：${used.map(id=>CAMPUS_LOCS.find(l=>l.id===id)?.label).join("、")}`:"你剛進入校園。","要去哪裡？"],links};
+  },
+  enter_loc:()=>{const loc=S.flags.loc;const name=CAMPUS_LOCS.find(l=>l.id===loc)?.label||loc;if(!S.flags.usedCampus.includes(loc))S.flags.usedCampus.push(loc);S.flags.lastArea="campus";S.flags.currentLoc=loc;S.flags.currentLocName=name;return resolveLocation(loc,name);},
+  after_loc:()=>{
+    if(S.flags.evt) return renderEvtChoice(); if(S.arousal>=50){S.flags.afterClimax="after_loc";return P.climax()}
+    if(currentEnergy()<=0) return {title:"體力不足",text:["你需要休息。"],links:[{label:"回家",go:"go_home"}]};
+    if(S.flags.phase==="night") return {title:"夜遊中",text:["要繼續夜遊，還是回家？"],links:[{label:"繼續夜遊",go:"outside_select"},{label:"回家（結束今天）",go:"go_home"}]};
+    if(S.flags.lastArea==="outside"){
+      const used=S.flags.usedOut||[]; const remain=OUT_LOCS.filter(l=>!used.includes(l.id));
+      const links=remain.map(l=>({label:l.label,go:"travel_choose",dest:l.id}));
+      links.push({label:"回校園",go:"campus_hub"}); links.push({label:"直接回家",go:"go_home"});
+      return {title:"校外・接下來",text:[remain.length?`還可以去其他校外地點，或選擇回校園／回家。`:`校外地點已大致走訪完畢。`,used.length?`已去過：${used.map(id=>OUT_LOCS.find(l=>l.id===id)?.label).join("、")}`:""].filter(Boolean),links};
+    }
+    return {title:"接下來",text:["要繼續活動，還是回家？"],links:[{label:"繼續留在校園",go:"campus_hub"},{label:"去校外",go:"outside_select"},{label:"直接回家",go:"go_home"}]};
+  },
+  daily_act:()=>{
+    const loc=S.flags.loc||S.flags.currentLoc||"classroom";
+    const campusMap={classroom:"你坐在座位上認真聽課、做筆記。時間平靜地過去。",art:"你拿起畫筆，完成今天的課堂練習。空氣裡有顏料的味道。",rooftop:"你在屋頂吹風，遠看操場上有人在打球。",toilet:"你整理儀容後離開。",empty:"你在空教室坐了一會兒，複習待會要交的報告。",gym:"你幫忙整理了幾樣器材。",office:"你向老師請教了幾個問題，得到簡單的回答。"};
+    const text=OUT_LOCS.some(l=>l.id===loc)?getOutsideDaily(loc):(campusMap[loc]||"你進行了日常活動。");
+    return {title:"日常活動",text:[text],onEnter:()=>{spendEnergy(6);fx({arousal:-6},[],`${S.heroine}做完事情後感覺稍微平靜了一些。`);if(S.arousal>=50)S.flags.afterClimax="stay_loc";},links:S.arousal>=50?[{label:"……",go:"climax"}]:[{label:"接下來",go:"stay_loc"}]};
+  },
+  daily_rest:()=>({title:"休息",text:["你找了個角落放空，什麼都沒做。"],onEnter:()=>{if(S.flags.phase==="night")S.flags.nightEnergy=Math.min(30,S.flags.nightEnergy+4);else S.energy=Math.min(100,S.energy+5);fx({arousal:-8},[],`${S.heroine}休息後感覺好一些。`);},links:[{label:"接下來",go:"stay_loc"}]}),
+  outside_select:()=>{
+    if(currentEnergy()<=0) return {title:"體力不足",text:["你太累了。"],links:[{label:"回家",go:"go_home"}]};
+    let rate=0; if(S.know>30&&S.know<=60) rate=25+Math.floor(Math.random()*20); if(S.flags.phase==="night") rate=Math.min(70,rate+25);
+    S.flags.trackRate=rate; const used=S.flags.usedOut||[]; const remain=OUT_LOCS.filter(l=>!used.includes(l.id));
+    const links=remain.map(l=>({label:l.label,go:"travel_choose",dest:l.id}));
+    if(S.flags.phase==="night") links.push({label:"回家（結束今天）",go:"go_home"}); else links.push({label:"直接回家",go:"go_home"});
+    return {title:S.flags.phase==="night"?"夜遊・選擇地點":"外出",text:["要去哪個地方？"],links};
+  },
+  travel_choose:()=>{
+    const canCar=S.corruption>=50&&S.fame>=50; const links=[{label:"搭地鐵",go:"travel_metro"}];
+    if(canCar) links.push({label:`上他人的車${S.flags.trackRate?`（被跟蹤機率 ${S.flags.trackRate}%）`:""}`,go:"travel_car"});
+    else links.push({label:"上他人的車（需沉淪度與知名度均≥50）",go:"#",disabled:true});
+    return {title:"移動方式",text:["怎麼前往？"],links};
+  },
+  travel_metro:()=>{
+    const rates=calcRates(true); const r=Math.random()*100; let acc=0;
+    if(rates.multi>0&&r<(acc+=rates.multi)) return startSex("train","電車車廂",true,true);
+    if(rates.single>0&&r<(acc+=rates.single)) return startSex("train","電車車廂",true,false);
+    if(rates.harass>0&&r<(acc+=rates.harass)) return startHarass("train","電車車廂",true);
+    return {title:"地鐵",text:["車程平靜結束，你到達目的地附近。"],onEnter:()=>{spendEnergy(3)},links:[{label:"抵達目的地",go:"arrive_dest"}]};
+  },
+  travel_car:()=>{
+    if(S.corruption<50||S.fame<50) return {title:"無法上車",text:["目前狀態不適合上陌生人的車。"],links:[{label:"返回",go:"outside_select"}]};
+    const tracked=S.flags.trackRate&&chance(S.flags.trackRate/100);
+    if(tracked) return {title:"車上被目擊",text:[`${S.bfName}看見你在車內被進入，他沒有衝上前。`],onEnter:()=>{spendEnergy(9);fx({corruption:7,arousal:10,pussy:2,people:1,know:10,yield:10,exposure:2})},links:[{label:"之後",go:"go_home"}]};
+    return {title:"他人車上",text:["男人把車停在隱密處，從後面進入你，射完後才繼續開。"],onEnter:()=>{spendEnergy(8);fx({corruption:5,arousal:9,pussy:1,people:1,know:2,exposure:1})},links:[{label:"抵達目的地",go:"arrive_dest"}]};
+  },
+  arrive_dest:()=>{const d=S.flags.dest||"convenience";if(!S.flags.usedOut.includes(d))S.flags.usedOut.push(d);const name=OUT_LOCS.find(l=>l.id===d)?.label||d;S.flags.lastArea="outside";S.flags.currentLoc=d;S.flags.currentLocName=name;return resolveLocation(d,name,false);},
+  expo_start:()=>{const loc=S.flags.loc||S.flags.currentLoc;const name=(CAMPUS_LOCS.find(l=>l.id===loc)||OUT_LOCS.find(l=>l.id===loc)||{}).label||loc;return startExposure(loc,name);},
+  expo_strip:()=>expoStrip(S.flags.stripPart),
+  expo_act:()=>expoActMenu(),
+  expo_do:()=>expoDo(S.flags.expoAct),
+  expo_caught:()=>expoCaught(),
+  expo_end:()=>expoEnd(),
+  put_on:()=>putClothesOn(S.flags.stripPart),
+  evt_resist:()=>handleResist(), evt_endure:()=>handleEndure(), evt_accept:()=>handleAccept(),
+  evt_continue:()=>{const e=S.flags.evt;if(!e)return {title:"事件已結束",text:[],links:[{label:"接下來",go:"stay_loc"}]};e.shotsLeft--;e.intensity++;if(e.shotsLeft<=0)return finishEvt(e,"continue");if(S.arousal>=50){S.flags.afterClimax="evt_continue";return P.climax()}return renderEvtChoice();},
+  date:()=>{S.flags.datedToday=true;return {title:`與${S.bfName}約會`,text:[`你們去了安靜的餐廳，短暫的正常相處讓他情緒緩和了一些。`],onEnter:()=>{spendEnergy(10);fx({know:-8,yield:-12,arousal:-5})},links:[{label:"結束約會",go:"hub"}]};},
+  go_home:()=>{
+    if(S.flags.phase==="night"){S.flags.phase="day";S.flags.nightEnergy=0;S.flags.evt=null;return {title:"回家・結束今天",text:[`你結束夜遊回到家。`,"今天到此結束。"],links:[{label:"睡覺，進入下一天",go:"__sleep"}]};}
+    S.flags.phase="home";S.flags.evt=null;return {title:"回家",text:homeDialogue(),onEnter:()=>fx({energy:6,arousal:-3}),links:[{label:"進入晚間",go:"evening_choice"}]};
+  },
+  evening_choice:()=>{S.flags.phase="night";S.flags.nightEnergy=30;S.flags.usedOut=[];return {title:"晚間",text:["吃過飯後，夜色已深。","要待在家還是再出門夜遊？（體力上限30）"],links:[{label:"出門夜遊",go:"night_out"},{label:"待在家休息，結束今天",go:"night_stay"}]};},
+  night_out:()=>({title:"夜遊開始",text:[`夜遊體力：${S.flags.nightEnergy}`],links:[{label:"選擇夜遊地點",go:"outside_select"}]}),
+  night_stay:()=>({title:"待在家",text:[`你選擇留在家裡。`],onEnter:()=>fx({energy:8,arousal:-7}),links:[{label:"睡覺，進入下一天",go:"__sleep"}]}),
+  orgy_start:()=>orgyStart(),orgy_continue:()=>orgyContinue(),orgy_end:()=>orgyEnd(),
+  ending:()=>{
+    const k=S.know,y=S.yield,c=S.corruption,f=S.fame;
+    let main=k>=80?`${S.bfName}已完全知情並在某種程度上參與。`:k>60?`${S.bfName}清楚知道事實。`:k>30?`${S.bfName}已有明顯懷疑。`:`${S.bfName}大多仍不知情。`;
+    return {title:"週末結算",text:[main,`知名度 ${f}　知情度 ${k}　屈服度 ${y}　沉淪度 ${c}　露出經驗 ${S.exposure}`,`累計：口${S.mouth} 穴${S.pussy} 後穴${S.ass} 經驗${S.people} 騷擾${S.harass}`],links:[{label:"再過一週",go:"soft_reset"}]};
+  }
+};
+
+const $=id=>document.getElementById(id);
+function go(name,extra={}){
+  if(extra.dest) S.flags.dest=extra.dest;
+  if(extra.loc) S.flags.loc=extra.loc;
+  if(extra.part) S.flags.stripPart=extra.part;
+  if(extra.act) S.flags.expoAct=extra.act;
+  if(name==="reset"||name==="soft_reset"){
+    const keep=name==="soft_reset";
+    const h=S.heroine,b=S.bfName,k=S.know,y=S.yield,f=S.fame,exp=S.exposure;
+    S=fresh();
+    if(keep){S.heroine=h;S.bfName=b;S.know=k;S.yield=y;S.fame=f;S.exposure=exp}
+    name="morning";
+  }
+  if(name==="__sleep"){
+    S.day++;S.slot=0;S.flags.phase="day";S.flags.nightEnergy=0;S.flags.orgyDay=false;S.flags.orgyCount=0;S.flags.datedToday=false;S.flags.evt=null;S.flags.afterClimax=null;S.flags.witnessPending=null;
+    name=S.day>4?"ending":"morning";
+  }
+  if(name!=="climax"&&name!=="after_climax"&&name!=="witness_view"&&S.arousal>=50&&!S.flags.evt){
+    S.flags.afterClimax=name; name="climax";
+  }
+  S.passage=name; lastDelta=[]; S.lastExplain=[]; S.aftermath="";
+  render(true);
+}
+
+function render(enter){
+  if(S.passage==="setup"){
+    $("passage").innerHTML=`
+      <div class="pname">:: setup</div>
+      <h2>遊戲開始前設置</h2>
+      <p>請輸入女主角與男朋友名稱，以及各項初始數值。</p>
+      <label>女主角名稱</label>
+      <input type="text" id="input-heroine" value="${S.heroine}">
+      <label>男朋友名稱</label>
+      <input type="text" id="input-bf" value="${S.bfName}">
+      <label>初始知名度 (0-100)</label>
+      <input type="number" id="input-fame" min="0" max="100" value="${S.fame}">
+      <label>初始知情度 (0-100)</label>
+      <input type="number" id="input-know" min="0" max="100" value="${S.know}">
+      <label>初始屈服度 (0-200)</label>
+      <input type="number" id="input-yield" min="0" max="200" value="${S.yield}">
+      <label>初始露出經驗 (0-100)</label>
+      <input type="number" id="input-exposure" min="0" max="100" value="${S.exposure}">
+      <div class="links" style="margin-top:10px">
+        <button type="button" id="btn-start">→ 確認並開始</button>
+      </div>`;
+    $("btn-start").onclick=()=>{
+      S.heroine=($("input-heroine").value.trim()||"千紗");
+      S.bfName=($("input-bf").value.trim()||"山本");
+      S.fame=clamp(parseInt($("input-fame").value)||5);
+      S.know=clamp(parseInt($("input-know").value)||20);
+      S.yield=clamp200(parseInt($("input-yield").value)||0);
+      S.exposure=clamp(parseInt($("input-exposure").value)||0);
+      $("game-title").textContent=S.heroine+"的一週";
+      go("morning");
+    };
+    renderSide(); return;
+  }
+  if(S.passage==="morning"){
+    const def=P.morning();
+    const el=$("passage");
+    el.innerHTML=`<div class="pname">:: morning</div><h2>${def.title}</h2>`;
+    def.text.forEach(t=>{const p=document.createElement("p");p.textContent=t;el.appendChild(p)});
+    const grid=document.createElement("div"); grid.className="check-grid";
+    [["vibe","跳蛋"],["plug","肛塞"],["dildo","假陽具"],["chain","胸鍊"],["noBra","不穿內衣"],["noPanty","不穿內褲"]].forEach(([k,label])=>{
+      grid.innerHTML+=`<label><input type="checkbox" id="toy_${k}"> ${label}</label>`;
+    });
+    el.appendChild(grid);
+    const box=document.createElement("div"); box.className="links";
+    const btn=document.createElement("button"); btn.type="button"; btn.textContent="確認配件並出門";
+    btn.onclick=()=>{
+      S.toys.vibe=$("toy_vibe").checked; S.toys.plug=$("toy_plug").checked;
+      S.toys.dildo=$("toy_dildo").checked; S.toys.chain=$("toy_chain").checked;
+      S.toys.noBra=$("toy_noBra").checked; S.toys.noPanty=$("toy_noPanty").checked;
+      // 早晨配件直接反映到即時衣著狀態
+      S.clothes.bra=!S.toys.noBra;
+      S.clothes.panty=!S.toys.noPanty;
+      S.clothes.top=true;
+      S.clothes.bottom=true;
+      if(toyCount()) fx({arousal:toyCount()*2});
+      go("hub");
+    };
+    box.appendChild(btn); el.appendChild(box);
+    renderSide(); return;
+  }
+
+  if(S.passage==="expo_strip"&&S.flags.stripPart){
+    const def=expoStrip(S.flags.stripPart);
+    if(enter&&def.onEnter) def.onEnter();
+    renderPassage(def); return;
+  }
+  if(S.passage==="expo_do"&&S.flags.expoAct){
+    const def=expoDo(S.flags.expoAct);
+    if(enter&&def.onEnter) def.onEnter();
+    renderPassage(def); return;
+  }
+
+  let def=P[S.passage]?P[S.passage]():{title:"?",text:["錯誤"],links:[{label:"回主選單",go:"hub"}]};
+  if(enter&&def.onEnter) def.onEnter();
+  updateOS();
+  renderPassage(def);
+}
+
+function renderPassage(def){
+  const el=$("passage"); el.innerHTML="";
+  el.appendChild(Object.assign(document.createElement("div"),{className:"pname",textContent:`:: ${S.passage}`}));
+  el.appendChild(Object.assign(document.createElement("h2"),{textContent:def.title}));
+  (def.text||[]).forEach(t=>{const p=document.createElement("p");p.textContent=t;el.appendChild(p)});
+  if(lastDelta.length){
+    const p=document.createElement("p");
+    lastDelta.forEach(([k,d])=>{const s=document.createElement("span");s.className="delta"+(d<0?" neg":"");s.textContent=`${LABEL[k]||k} ${d>0?"+":""}${d}`;p.appendChild(s)});
+    el.appendChild(p);
+  }
+  if(S.lastExplain?.length){
+    const box=document.createElement("div"); box.className="explain";
+    box.innerHTML=S.lastExplain.map(e=>`<div><b>${e.stat}：</b>${e.text}</div>`).join("");
+    el.appendChild(box);
+  }
+  if(S.aftermath){const af=document.createElement("div");af.className="aftermath";af.textContent=S.aftermath;el.appendChild(af)}
+
+  const box=document.createElement("div"); box.className="links";
+  (def.links||[]).forEach(l=>{
+    const b=document.createElement("button"); b.type="button";
+    b.append(document.createTextNode(l.label));
+    if(l.hint){const sm=document.createElement("small");sm.textContent=l.hint;b.appendChild(sm)}
+    if(l.disabled) b.disabled=true;
+    b.onclick=()=>{
+      if(l.dest) S.flags.dest=l.dest;
+      if(l.loc) S.flags.loc=l.loc;
+      if(l.part) S.flags.stripPart=l.part;
+      if(l.act) S.flags.expoAct=l.act;
+      go(l.go,{dest:l.dest,loc:l.loc,part:l.part,act:l.act});
+    };
+    box.appendChild(b);
+  });
+  el.appendChild(box);
+  renderSide();
+}
+
+function renderSide(){
+  $("clock").innerHTML=S.day>4?"<b>週末</b>":`第 <b>${S.day+1}</b> 天・${WEEKDAYS[Math.min(S.day,4)]}・${SLOTS[S.slot]}`;
+  const stats=$("stats"); stats.innerHTML="<h3>狀態</h3>";
+  const displayEnergy=S.flags.phase==="night"?S.flags.nightEnergy:S.energy;
+  [["energy","體力"],["corruption","沉淪度"],["arousal","興奮度"],["fame","知名度"],["know","知情度"],["yield","屈服度"],["exposure","露出經驗"]].forEach(([k,n])=>{
+    const val=k==="energy"?displayEnergy:S[k];
+    const max=k==="yield"?200:100;
+    const d=document.createElement("div"); d.className="stat";
+    d.innerHTML=`<span>${n}</span><span></span><span class="v">${val}</span><div class="bar${val<max*0.25?" low":""}"><i style="width:${Math.min(100,val/max*100)}%"></i></div>`;
+    stats.appendChild(d);
+  });
+  const d2=document.createElement("div"); d2.className="stat";
+  d2.innerHTML=`<span>口</span><span></span><span class="v">${S.mouth}</span><span>穴</span><span></span><span class="v">${S.pussy}</span><span>後穴</span><span></span><span class="v">${S.ass}</span><span>經驗</span><span></span><span class="v">${S.people}</span><span>騷擾</span><span></span><span class="v">${S.harass}</span>`;
+  stats.appendChild(d2);
+  const osCard=$("os-card");
+  if(S.know>=20&&S.os){osCard.style.display="block";$("os-text").textContent=S.os}else osCard.style.display="none";
+  $("vars").innerHTML=`${S.heroine} ／ ${S.bfName}
+$fame=${S.fame} $know=${S.know} $yield=${S.yield}
+體力=${displayEnergy} $corruption=${S.corruption} 露出=${S.exposure}
+配件=${toyCount()}  phase=${S.flags.phase} lastArea=${S.flags.lastArea}
+使用 ${S.mouth}/${S.pussy}/${S.ass} 經驗${S.people} 騷擾${S.harass}
+<span class="c">${S.passage}</span>`;
+}
+
+const KEY="chisa-week-v19";
+function toast(m){$("toast").textContent=m;setTimeout(()=>$("toast").textContent="",2000)}
+$("btn-save").onclick=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));toast("已存檔")}catch(e){toast("無法存檔")}};
+$("btn-load").onclick=()=>{try{const r=localStorage.getItem(KEY);if(!r){toast("無存檔");return}S=Object.assign(fresh(),JSON.parse(r));$("game-title").textContent=S.heroine+"的一週";render(false);toast("已讀取")}catch(e){toast("讀檔失敗")}};
+let armed=false;
+$("btn-reset").onclick=e=>{
+  if(!armed){armed=true;e.target.textContent="再按確認";setTimeout(()=>{armed=false;e.target.textContent="重新開始"},2400);return}
+  armed=false;e.target.textContent="重新開始";go("reset");
+};
+render(true);
+</script>
+</body>
+</html>
