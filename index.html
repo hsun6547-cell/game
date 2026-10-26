@@ -610,15 +610,15 @@ function updateOS(){
     const cinema=/cinema/.test(p);
     const choosing=p==="date_pay"||p==="date_place";
     if(choosing){
-      bag=love
-        ?[`她要跟我約會 我現在就想見到她`,`選地方也沒關係 只要是跟她`]
-        :[`約會啊 隨便去哪`,`她約我 我也不知道該說什麼`];
+      bag=p==="date_pay"
+        ?(love?[`她要跟我約會 我現在就想見到她`,`誰出錢都沒關係 只要能見她`]:[`約會啊 誰出錢`,`她約我 我也不知道該說什麼`])
+        :(love?[`選地方也沒關係 只要是跟她`,`電影院也好 只要手能握着`]:[`隨便去哪`,`地點不重要`]);
     } else if(cinema&&dc){
       if(dc.bfSaw&&(y>50)) bag=[`我看見了 他們在碰她 我沒有伸手`,`讓他們弄完 我還是坐在旁邊 因為我還在`];
       else if(dc.bfSaw) bag=[`我拉開那些手了 她今天是跟我來的`,`夠了 電影還在放 手却不能停在她身上`];
       else if(dc.attack) bag=love
-        ?[`她坐在旁邊 我在看片 沒注意到隔壁在做什麼`,`手還握着她 電影音量${dc.vol<50?"很低":"很大"}`]
-        :[`她在旁邊 我在看螢幕 沒發現`,`這場電影還有半小時`];
+        ?[`她坐在旁邊 我在看片 沒注意到隔壁在做什麼`,`手還握着她 這段我沒轉頭`,`電影音量${dc.vol<50?"很低 她好像很安靜":"很大 我聽不清旁邊"}`]
+        :[`她在旁邊 我在看螢幕 沒發現`,`這場電影還有半小時`,`我沒看她 只看着螢幕`];
       else bag=love
         ?[`跟她在電影院 手握着 好近`,`音量${dc.vol<50?"很低 我只能用氣音":"很大 我靠過去說話"}`]
         :[`電影院 她坐在旁邊`,`看完就走`];
@@ -871,19 +871,29 @@ function npcNightText(npc,locName,forced){
 function npcPay(){
   const id=S.flags.currentNpc;
   const npc=npcById(id);
-  const payMap={convenience:200,river:250,park:300,apartment:400,parking:350,bath:500};
+  const payMap={convenience:200,river:250,park:300,apartment:400,parking:350,bath:500,cinema:350,maid:450};
   const amount=payMap[S.flags.currentLoc]||200;
   addMoney(amount);
   markUsed();
-  return {title:"援交",text:[`${npc.name}把 ${amount} 元塞進你手裡。「那就當援交。別跟別人說。」`,`你收了。心裡算着這筆錢，穴口却還記得剛才的約會。`],onEnter:()=>fx({know:3,corruption:2}),links:[{label:"接下來",go:"stay_loc"}]};
+  return {title:"援交",text:[
+    `${npc.name}把你拉到沒人的地方 「約會結束了 這筆算援交」`,
+    `他沒再問你願不願意 裙子掀起 性器抵上穴口 「收錢就張開 騷貨」一下就頂進去`,
+    `抽了十幾下 他射在裡面 才把 ${amount} 元塞進你手心 「別跟別人說 下次還找你」`,
+    `你收了 心裡算着這筆錢 穴口却還記得剛才被頂的感覺`
+  ],onEnter:()=>fx({know:3,corruption:2,pussy:1,semen:10,people:1}),links:[{label:"接下來",go:"stay_loc"}]};
 }
 function nightPickup(){
   if(S.corruption<20) return {title:"沒有人搭訕",text:["夜路很安靜。沒有人把你當成可以買的。"],links:[{label:"繼續",go:"outside_select"}]};
   const loc=rnd(OUT_LOCS);
-  const payMap={convenience:200,river:250,park:300,apartment:400,parking:350,bath:500};
+  const payMap={convenience:200,river:250,park:300,apartment:400,parking:350,bath:500,cinema:350,maid:450};
   const amount=payMap[loc.id]||200;
   S.flags.currentLoc=loc.id; S.flags.currentLocName=loc.label;
-  return {title:"夜間援交",text:[`有人在${loc.label}攔住你。「一小時，${amount}。跟我走。」`],links:[{label:"答應",go:"night_pay",act:String(amount)},{label:"拒絕",go:"outside_select"}]};
+  S.flags.mood="night_pickup";
+  return {title:"夜間援交",text:[
+    `你在${loc.label}附近走 有人把車窗搖下來 「一小時 ${amount} 跟我走」`,
+    `他看了你一眼 「夜路還一個人 就是在等這個吧 騷貨」`,
+    `你可以答應 也可以拒絕 答應的話這一小時就是他的`
+  ],links:[{label:`答應（${amount}元）`,go:"night_pay",act:String(amount)},{label:"拒絕",go:"outside_select"}]};
 }
 function startNpcNight(forced){
   const id=S.flags.currentNpc;
@@ -1054,7 +1064,8 @@ function stayAtLocation(){
     if(S.corruption>=50) links.push({label:"特殊主人服務",go:"maid_special"});
   }
   if(locId==="cinema") links.push({label:"看電影（120元，兩小時半，不能提早離場）",go:"cinema_start"});
-  if(S.flags.lastArea==="campus"&&locId!=="park") links.push({label:"進入男廁",go:"school_toilet"});
+  const toiletHere=["toilet","gym","field","empty","canteen"].includes(locId);
+  if(S.flags.lastArea==="campus"&&toiletHere&&S.exposure>=50&&S.corruption>=50) links.push({label:"進入男廁",go:"school_toilet"});
   links.push({label:"離開此地，前往其他地方",go:"after_loc"});
   links.push({label:"直接回家",go:"go_home"});
   const status=[];
@@ -1077,6 +1088,8 @@ function classSpend(base=3){spendEnergy(classCost(base));}
 function pickTrainWho(kind,n){
   const pool=kind==="class"
     ?["左邊的鄰桌同學","前方的鄰桌同學","右邊的鄰桌同學"]
+    :shopKind()==="canteen"
+    ?["來買麵包的同學","排隊的學長","櫃檯前的男生"]
     :["櫃檯前的客人","排隊的客人","同事"];
   return pool.slice(0,Math.max(1,Math.min(n||1,pool.length)));
 }
@@ -1645,7 +1658,8 @@ function shopWorkAdvance(text,ch,exp,tag,after){
   if(tag) S.flags.workLast=tag;
   S.flags.workPeriod=(S.flags.workPeriod||0)+1;
   const done=S.flags.workPeriod>=5;
-  return {title:`${WORK_SLOTS[(S.flags.workPeriod||1)-1]}結束`,text,onEnter:()=>{classSpend(3);spendTime(0.5);fx(ch||{},exp||[]);if(after)after();if(done)addMoney(50);},links:[{label:"下一個時段",go:"shop_work_menu"}]};
+  const slot=WORK_SLOTS[Math.max(0,Math.min(WORK_SLOTS.length-1,(S.flags.workPeriod||1)-1))]||"這個時段";
+  return {title:`${slot}結束`,text,onEnter:()=>{classSpend(3);spendTime(0.5);fx(ch||{},exp||[]);if(after)after();if(done)addMoney(50);},links:[{label:done?"下班":"下一個時段",go:"shop_work_menu"}]};
 }
 function shopWorkObey(){
   const pay=()=>addMoney(30);
@@ -1739,12 +1753,27 @@ function shopWorkExpo(){
 function shopWorkStrip(part){
   S.flags.mood="shop_work_strip_"+part;
   const c=S.clothes;
-  const toy=shopKind()==="toy";
+  const k=shopKind();
   let t="";
-  if(part==="top"){c.top=false;t=toy?(c.bra?"你在櫃檯後脫掉上衣 只留店裡的薄外套 介紹胸鍊時一彎腰 內衣就露給客人":"你脫掉上衣 沒有內衣 乳尖只隔着薄外套 客人問尺寸時視線停在胸口"):(c.bra?"你在試衣間脫掉上衣 簾子沒拉好 內衣暴露在店裡的燈下":"你脫掉上衣 沒有內衣 乳尖直接被試衣間的燈照到 外面任何人一掀簾就看見");}
-  if(part==="bottom"){c.bottom=false;t=toy?(c.panty?"你脫掉下衣 櫃檯底下只剩內褲 介紹假陽具時腿已經分開":"你脫掉下衣 沒有內褲 小穴直接貼着櫃檯陰影 客人卻只看見你在介紹商品"):(c.panty?"你把下衣褪到腳踝 內褲還在 簾子一開就看見你站在試衣間":"你脫掉下衣 沒有內褲 小穴暴露在試衣間 風從簾縫吹過");}
-  if(part==="bra"){c.bra=false;t=toy?"你解開內衣 胸鍊樣品一貼上去 乳尖就頂出來 「要不要看震動哈」":"你解開內衣 乳房完全露在試衣間 你只能側着身 怕簾外有人";}
-  if(part==="panty"){c.panty=false;t=toy?"你褪掉內褲 穴口對着玻璃櫃 「跳蛋可以貼這裡 要看嗎」":"你褪掉內褲 穴口暴露在試衣間 外面的掛衣聲還在";}
+  if(part==="top"){
+    t=k==="toy"?(c.bra?"你在櫃檯後脫掉上衣 只留店裡的薄外套 介紹胸鍊時一彎腰 內衣就露給客人":"你脫掉上衣 沒有內衣 乳尖只隔着薄外套 客人問尺寸時視線停在胸口")
+      :k==="maid"?(c.bra?"你在吧台後解開上衣 女僕領口更低 主人一低頭就看見內衣":"你脫掉上衣 沒有內衣 乳尖只隔着女僕裙的領口")
+      :k==="canteen"?(c.bra?"你在小賣部櫃檯後脫掉上衣 圍裙還繫着 同學結帳時能看見內衣邊緣":"你脫掉上衣 沒有內衣 乳尖只隔着圍裙 下課的人一湊近就看見")
+      :(c.bra?"你在試衣間脫掉上衣 簾子沒拉好 內衣暴露在店裡的燈下":"你脫掉上衣 沒有內衣 乳尖直接被試衣間的燈照到");
+  }
+  if(part==="bottom"){
+    t=k==="toy"?(c.panty?"你脫掉下衣 櫃檯底下只剩內褲 介紹假陽具時腿已經分開":"你脫掉下衣 沒有內褲 小穴直接貼着櫃檯陰影")
+      :k==="maid"?(c.panty?"你把下衣褪到腳踝 女僕裙還蓋着 主人一掀就看見內褲":"你脫掉下衣 沒有內褲 女僕裙底是空的")
+      :k==="canteen"?(c.panty?"你在櫃檯後褪掉下衣 圍裙擋住外面 同學看不見你只剩內褲":"你脫掉下衣 沒有內褲 穴口貼着櫃檯陰影 你還得把麵包遞出去")
+      :(c.panty?"你把下衣褪到腳踝 內褲還在 簾子一開就看見":"你脫掉下衣 沒有內褲 小穴暴露在試衣間");
+  }
+  if(part==="bra"){
+    t=k==="toy"?"你解開內衣 胸鍊樣品一貼上去 乳尖就頂出來":k==="maid"?"你解開內衣 乳尖頂在女僕領口":k==="canteen"?"你解開內衣 乳尖只隔着圍裙 結帳時一彎腰就頂出來":"你解開內衣 乳房完全露在試衣間";
+  }
+  if(part==="panty"){
+    t=k==="toy"?"你褪掉內褲 穴口對着玻璃櫃":k==="maid"?"你褪掉內褲 女僕裙底什麼都沒有":k==="canteen"?"你褪掉內褲 櫃檯底下是空的 穴口貼着圍裙陰影 同學還在排隊":"你褪掉內褲 穴口暴露在試衣間";
+  }
+  c[part]=false;
   return {title:"調整衣着",text:[t],links:[{label:"繼續",go:"shop_work_expo"}]};
 }
 function shopWorkExpoDo(){
@@ -1752,34 +1781,35 @@ function shopWorkExpoDo(){
   const st=clothesState();
   const rate=st==="nude"?0.5:st==="top"||st==="bottom"?0.35:0.22;
   if(chance(rate)) return shopWorkCaught(st);
-  const toy=shopKind()==="toy";
-  return shopWorkAdvance(toy?[
-    `你站在玻璃櫃後 對客人介紹跳蛋 「這個貼在陰蒂 會一直震哈」`,
-    `櫃檯擋住的地方 你却以現在的衣着站着 客人問能不能看 你把腿分開一點 沒有完全給`,
-    `有人在櫃檯前多站了幾秒 「她自己也沒穿吧」你聽見了 穴口却夾緊`,
-    `這個時段你幾乎没辦法正常報價 心裡只剩 還在上班 客人就在前面 我却這樣站着`
-  ]:[
-    `你在試衣間換下一件 簾子只拉到腰 「這件可以試哈」你對外面說`,
-    `簾子外有人停住 你知道自己底下是現在這個樣子 一彎腰就會露`,
-    `有人問 「店員也能試給我看嗎」你沒答 心跳却快了`,
-    `這個時段你一直在脫 在穿 在怕簾子被掀開`
-  ],{arousal:7,exposure:2,corruption:2},[{stat:"露出經驗",text:"在店裡打工時露出。"}],"expo");
+  const k=shopKind();
+  const pool={
+    toy:[`你站在玻璃櫃後 對客人介紹跳蛋`,`櫃檯擋住的地方 你却以現在的衣着站着`,`有人多站了幾秒 「她自己也沒穿吧」`,`這個時段你幾乎沒辦法正常報價`],
+    maid:[`你端着托盤走過去 女僕裙底是現在這個樣子`,`主人低頭 視線停在領口`,`你還是說歡迎回來主人 聲音却發緊`,`這個時段你一直在怕裙子被掀`],
+    canteen:[`你站在小賣部櫃檯後 圍裙還繫着 底下却是現在這個樣子`,`同學把錢遞過來 你彎腰拿麵包 穴口貼着陰影`,`有人多看了一眼 「今天小賣部的店員怎麼站成這樣」你沒答 只把飲料推過去`,`這個時段你一直在結帳 心裡只剩 下課的人就在前面 我却這樣站着`],
+    cloth:[`你在試衣間換下一件 簾子只拉到腰`,`簾子外有人停住 你知道自己底下是現在這個樣子`,`有人問店員也能試給我看嗎`,`這個時段你一直在脫 在穿 在怕簾子被掀開`]
+  };
+  return shopWorkAdvance(pool[k]||pool.cloth,{arousal:7,exposure:2,corruption:2},[{stat:"露出經驗",text:`在${shopName()}打工時露出。`}],"expo");
 }
 function shopWorkCaught(st){
   markUsed();
   S.flags.mood="shop_work_caught";
-  const toy=shopKind()==="toy";
+  const k=shopKind();
   const tip=shameTip("sex",1);
-  const open=toy
-    ?(st==="nude"?`客人繞到櫃檯裡面 「示範員什麼都沒穿哈 騷貨」玻璃櫃前的人都轉過來`:`客人看見你衣着不整 「跳蛋示範要脫成這樣嗎」他沒有離開`)
-    :(st==="nude"?`簾子被掀開 你全身赤裸站在試衣間 「店員全裸換裝哈」外面有人圍過來`:`客人掀開簾子 看見你衣着不整 「試衣間脫成這樣 是給誰看 婊子」`);
-  return shopWorkAdvance([
-    open,
-    toy?`「別出聲 繼續示範哈」他把你按在玻璃櫃上 性器抵上穴口 一下就頂進去 跳蛋還在陰蒂上震`:`「別出聲」他把你按在試衣間的鏡子上 性器抵上穴口 一下就頂進去 鏡子里全是你被進入的樣子`,
-    toy?`抽送一下一下 圍觀的人笑 「她真的在用假陽具的位子給客人用哈」你抓着櫃檯 把呻吟壓成 這盒八折`:`抽送一下一下 簾子只遮一半 外面有人看着你的腿 「笑一個 這件我要了」`,
-    `他射在你體內才鬆手 「繼續上班 精液夾好哈」下一個客人已經在等`,
-    tip.line
-  ].filter(Boolean),{arousal:12,exposure:5,corruption:5,pussy:1,people:1,semen:16,know:2},[{stat:"精液",text:"打工露出被發現後被插入。"},{stat:"金錢",text:tip.amount?`小費 +${tip.amount}。`:""}],"caught",()=>tip.amount&&addMoney(tip.amount));
+  const open=k==="toy"
+    ?(st==="nude"?`客人繞到櫃檯裡面 「示範員什麼都沒穿 騷貨」`:`客人看見你衣着不整 「跳蛋示範要脫成這樣嗎」`)
+    :k==="maid"
+    ?(st==="nude"?`主人掀開女僕裙 「全裸服務啊」`:`主人看見你衣着不整 「裙底怎麼是空的」`)
+    :k==="canteen"
+    ?(st==="nude"?`同學繞到櫃檯後面 「小賣部店員什麼都沒穿」下課的人都轉過來`:`同學看見你圍裙底下是空的 「賣麵包還敢這樣 婊子」`)
+    :(st==="nude"?`簾子被掀開 你全身赤裸站在試衣間`:`客人掀開簾子 看見你衣着不整`);
+  const mid=k==="canteen"
+    ?[`「別出聲 繼續賣」他把你按在麵包架旁 性器抵上穴口 一下就頂進去`,`抽送一下一下 你還把飲料推給下一個同學 「歡迎……光臨……」`,`他射在你體內 「繼續賣麵包 精液夾好 別滴到商品上」`]
+    :k==="toy"
+    ?[`他把你按在玻璃櫃上 性器抵上穴口`,`圍觀的人笑`,`他射在你體內 「繼續介紹 精液夾好」`]
+    :k==="maid"
+    ?[`他把你按在吧台 女僕裙掀起 性器頂進去`,`你還說歡迎回來主人`,`他射在你體內 「夾好再去端咖啡」`]
+    :[`他把你按在試衣間鏡子上 性器抵上穴口`,`簾子只遮一半`,`他射在你體內 「穿着這個出去結帳」`];
+  return shopWorkAdvance([open,...mid,tip.line].filter(Boolean),{arousal:12,exposure:5,corruption:5,pussy:1,people:1,semen:16,know:2},[{stat:"精液",text:"打工露出被發現後被插入。"},{stat:"金錢",text:tip.amount?`小費 +${tip.amount}。`:""}],"caught",()=>tip.amount&&addMoney(tip.amount));
 }
 function shopWorkNude(){
   S.flags.mood="shop_work_nude";
@@ -1907,45 +1937,28 @@ function shopWorkSeduce2(){
   return def;
 }
 function shopWorkPlace(){
-  const act=S.flags.expoAct||(shopKind()==="toy"?"counter":"room");
+  const k=shopKind();
+  const act=S.flags.expoAct||(k==="toy"?"counter":k==="cloth"?"floor":"store");
   const who=(S.flags.workTrain&&S.flags.workTrain.who)||pickTrainWho("work",1);
   S.flags.workTrain=null;
   S.flags.mood="shop_work_place_"+act;
   const names=trainLine(who);
-  const map={
-    counter:[
-      `「就在櫃檯示範哈」他把你按在玻璃櫃上 假陽具先抵進去 再換成自己的`,
-      `你一邊被幹 一邊把跳蛋盒子推給客人 「這盒……八折……」圍觀的人笑`,
-      `他射在你體內 「繼續介紹 精液夾好 別滴到商品上 騷貨」`
-    ],
-    shelf:[
-      `你們躲到貨架後面 肛塞樣品還在你後穴 「拿東西的人來了就停」`,
-      `有人來問尺寸 你們停了一下 腳步遠了 他又開始抽 「貨架後面被幹 你也真敢哈」`,
-      `他射在裡面 把你的衣服拉好 「回去站櫃 夾好」`
-    ],
-    store:[
-      `倉庫門帶上 「這節不用出去了」他把你按在紙箱上 前穴進性器 後穴進假陽具`,
-      `外面還有人在問價 這裡只剩拍打聲 「叫出來也沒人來 婊子」`,
-      `兩個人輪流射在你體內 「回去微笑 下一班再試新的」`
-    ],
-    floor:[
-      `店裡還亮着 他把你按在衣架旁 裙子掀到腰 「就在這裡換給大家看哈」`,
-      `性器從後面進入 衣架跟着晃 有客人停下來看 「她在上班做愛 騷貨」`,
-      `他射在你體內 把新裙子套回去 「穿着這個去結帳」`
-    ],
-    room:[
-      shopKind()==="maid"
-        ?`包廂門關上 他把你按在沙發上 「今晚的套餐是你哈」女僕裙掀到腰 性器頂進前穴`
-        :`試衣間的簾子只拉一半 他把你按在鏡子上 「看着自己被幹哈」`,
-      shopKind()==="maid"
-        ?`你還端着托盤 咖啡灑在胸口 「叫主人 每一下都叫 騷貨」抽送一下一下 鈴鐺跟着響`
-        :`性器頂進前穴 手指插進後穴 鏡子里全是你張着嘴的樣子`,
-      shopKind()==="maid"
-        ?`他射在你體內 「服務費加一倍 精液夾好再出去端咖啡 婊子」`
-        :`外面有人問還有沒有貨 你用斷掉的聲音說 有 他却射在最深處 「夾好再出去 婊子」`
-    ]
+  const map=k==="canteen"?{
+    counter:[`${names}把你按在小賣部櫃檯後 「就在這裡做 別停賣」`,`性器從後面頂進前穴 你還抓着麵包夾 下課的人看不見櫃檯底下`,`他射在你體內 「繼續找零 精液夾好 別滴到麵包上」`],
+    shelf:[`${names}把你拉到貨架後面 餅乾盒只擋住一半`,`有同學來拿飲料 你們停了一下 人走了他又抽 「貨架後面被幹 你也真敢」`,`他射在裡面 把你的圍裙拉好 「回去結帳」`],
+    store:[`${names}把你推進小賣部倉庫 門帶上 「這節不用出去了」`,`紙箱上 前穴進性器 你還能聽見外面在喊有沒有巧克力`,`他們射完 「回去微笑 下一節再來」`]
+  }:k==="maid"?{
+    counter:[`${names}把你按在吧台 「服務貼身一點」女僕裙掀起`,`你還端着托盤 咖啡灑在胸口`,`他射在你體內 「夾好再去端」`],
+    room:[`包廂門關上 ${names}把你按在沙發上 女僕裙掀到腰`,`你還說歡迎回來主人`,`他射在你體內 「服務費加一倍」`],
+    store:[`${names}把你按在後廚流理台`,`外面還有人在點單`,`他射完 「回去端咖啡」`]
+  }:{
+    counter:[`「就在櫃檯示範」他把你按在玻璃櫃上`,`你一邊被幹 一邊把盒子推給客人`,`他射在你體內 「繼續介紹 精液夾好」`],
+    shelf:[`你們躲到貨架後面`,`有人來問尺寸 你們停了一下`,`他射在裡面 「回去站櫃」`],
+    store:[`倉庫門帶上 他把你按在紙箱上`,`外面還有人在問價`,`兩個人輪流射在你體內`],
+    floor:[`店裡還亮着 他把你按在衣架旁 裙子掀到腰`,`性器從後面進入 衣架跟着晃`,`他射在你體內 把新裙子套回去`],
+    room:[`試衣間的簾子只拉一半 他把你按在鏡子上`,`性器頂進前穴`,`外面有人問還有沒有貨 你用斷掉的聲音說 有`]
   };
-  return shopWorkAdvance(map[act]||map.store,{corruption:5,arousal:10,pussy:1,people:who.length,semen:14},[{stat:"精液",text:`和${names}做完，被使用狀態解除。`}],"place");
+  return shopWorkAdvance(map[act]||map.store||map.counter,{corruption:5,arousal:10,pussy:1,people:who.length,semen:14},[{stat:"精液",text:`和${names}在${shopName()}做完，被使用狀態解除。`}],"place");
 }
 function canteenFood(){
   if((S.money||0)<20) return {title:"錢不夠",text:["麵包 20 元。你口袋裡不夠。"],links:[{label:"回去",go:"stay_loc"}]};
@@ -3581,7 +3594,6 @@ const P={
     if(currentEnergy()<=0) return {title:"體力不足",text:["你太累了。"],links:[{label:"回家",go:"go_home"}]};
     const used=S.flags.usedCampus||[]; const remain=CAMPUS_LOCS.filter(l=>!used.includes(l.id));
     const links=remain.map(l=>({label:l.label,go:"enter_loc",loc:l.id}));
-    links.push({label:"進入男廁",go:"school_toilet"});
     links.push({label:"去校外",go:"outside_select"}); links.push({label:"直接回家",go:"go_home"});
     if(allLocationsDone()) return {title:"地點已走訪完畢",text:["今天能去的地方都去過了。"],links:[{label:"回家",go:"go_home"}]};
     const atmosphere=getClothesAtmosphere("校園");
@@ -3646,8 +3658,19 @@ const P={
   travel_car:()=>{
     if(S.corruption<50||S.fame<50) return {title:"無法上車",text:["目前狀態不適合上陌生人的車。"],links:[{label:"返回",go:"outside_select"}]};
     const tracked=S.flags.trackRate&&chance(S.flags.trackRate/100);
-    if(tracked) return {title:"車上被目擊",text:[`${S.bfName}看見你在車內被進入，他沒有衝上前。`],onEnter:()=>{spendEnergy(9);fx({corruption:7,arousal:10,pussy:2,people:1,know:10,yield:10,exposure:2,semen:18})},links:[{label:"之後",go:"go_home"}]};
-    return {title:"他人車上",text:["男人把車停在隱密處，從後面進入你，射完後才繼續開。"],onEnter:()=>{spendEnergy(8);fx({corruption:5,arousal:9,pussy:1,people:1,know:2,exposure:1,semen:16})},links:[{label:"抵達目的地",go:"arrive_dest"}]};
+    const dest=OUT_LOCS.find(l=>l.id===S.flags.dest)?.label||"目的地";
+    if(tracked) return {title:"車上被目擊",text:[
+      `你坐進陌生人的車 說要去${dest}`,
+      `車開到半路 他停在暗處 「先付車資 用身體」裙子掀起 性器從後面頂進來`,
+      `${S.bfName}剛好看見車窗裡的你 他沒有衝上來 只是站在路邊`,
+      `那個人射完才繼續開 「到了 下來」你腿還在抖`
+    ],onEnter:()=>{spendEnergy(9);spendTime(0.5);fx({corruption:7,arousal:10,pussy:2,people:1,know:10,yield:10,exposure:2,semen:18})},links:[{label:"之後",go:"go_home"}]};
+    return {title:"他人車上",text:[
+      `你坐進車裡 「去${dest}」他看了你一眼 「車資用身體付 騷貨」`,
+      `車停在沒人的地方 他把你按在後座 裙子掀到腰 性器從後面進入`,
+      `抽送一下一下 車身輕晃 「夾緊 到了再射」你抓着椅背 外面有車經過`,
+      `他射在你體內 才重新發動 「到了 精液夾好再下去」`
+    ],onEnter:()=>{spendEnergy(8);spendTime(0.5);fx({corruption:5,arousal:9,pussy:1,people:1,know:2,exposure:1,semen:16})},links:[{label:"抵達目的地",go:"arrive_dest"}]};
   },
   arrive_dest:()=>{const d=S.flags.dest||"convenience";if(!S.flags.usedOut.includes(d))S.flags.usedOut.push(d);const name=OUT_LOCS.find(l=>l.id===d)?.label||d;S.flags.lastArea="outside";S.flags.currentLoc=d;S.flags.currentLocName=name;return resolveLocation(d,name,false);},
   expo_start:()=>{const loc=S.flags.loc||S.flags.currentLoc;const name=(CAMPUS_LOCS.find(l=>l.id===loc)||OUT_LOCS.find(l=>l.id===loc)||{}).label||loc;return startExposure(loc,name);},
@@ -3730,7 +3753,14 @@ const P={
   night_pay:()=>{
     const amount=parseInt(S.flags.expoAct)||200;
     addMoney(amount); markUsed();
-    return {title:"援交結束",text:[`他在${S.flags.currentLocName}用了你一小時，把 ${amount} 元留下。知情的人如果看見，會比白天更快傳開。`],onEnter:()=>fx({know:4,corruption:3,semen:16,pussy:1,people:1}),links:[{label:"繼續夜遊",go:"outside_select"}]};
+    const loc=S.flags.currentLocName||"夜路";
+    return {title:"援交結束",text:[
+      `你跟着他走到${loc}的暗處 「一小時 開始了」`,
+      `他沒前戲 裙子掀起 性器抵上穴口 「收錢就夾緊 騷貨」一下頂到最深`,
+      `這一小時他換了幾個姿勢 有時從後面 有時讓你跪下含 你只能算着時間`,
+      `時間到 他射在你體內 把 ${amount} 元拍進你手心 「下次還在這條路等我」`,
+      `你整理裙子 腿還在抖 知情的人如果看見 會比白天更快傳開`
+    ],onEnter:()=>{spendTime(1);fx({know:4,corruption:3,semen:16,pussy:1,people:1,arousal:8})},links:[{label:"繼續夜遊",go:"outside_select"}]};
   },
   npc_refuse:()=>npcRefuse(),
   npc_night:()=>startNpcNight(false),
@@ -4160,13 +4190,18 @@ function voiceHtml(){
     shop_work_nude:set("不要看……",shopKind()==="toy"?"全裸站在玻璃櫃後……他們在等我把假陽具吃進去。":shopKind()==="maid"?"女僕裙脫了……只剩頭飾……主人都在看。":shopKind()==="canteen"?"小賣部全裸……下課的人都在看我賣麵包。":"試衣間全裸……簾外有人在看。"),
     shop_work_seduce:set("心跳好快……",shopKind()==="toy"?"是我先把跳蛋塞到他手上的。":shopKind()==="maid"?"是我先把主人拉進包廂的。":shopKind()==="canteen"?"是我先叫同學鑽進櫃檯的。":"是我先把客人拉進試衣間的。"),
     shop_work_violate:set("啊……不要在店裡……",shopKind()==="toy"?"假陽具還在裡面……客人却換成自己的……哦……":shopKind()==="maid"?"包廂裡……他要我叫主人……哦……":shopKind()==="canteen"?"櫃檯後面……同學還在排隊……他頂進來了……哦……":"試衣間的簾子在晃……他頂進來了……哦……"),
-    shop_work_place:set("哈啊……","就在店裡被幹……還得繼續上班……"),
+    shop_work_place:set("哈啊……",shopKind()==="canteen"?"小賣部櫃檯後面……我還得把麵包遞出去……哦……":shopKind()==="toy"?"玻璃櫃上……還得介紹……哦……":shopKind()==="maid"?"吧台……還得叫主人……哦……":"就在店裡被幹……還得繼續上班……"),
+    night_pickup:set("心跳好快……","夜路有人攔我……一小時……要不要答應……"),
+    night_pay:set("啊……收錢了……","這一小時是他的……穴還在被頂……哦……"),
+    travel_car:set("啊……車上……","陌生人的車……車資用身體付……後座在晃……哦……"),
     work_strip:set("哈……","正在脫。客人看不見，我自己知道。"),
     mast_pick:set("要自己來嗎……","自慰的話，用道具、手指，還是拳頭。"),
     daily_act:set("……","做點平常的事，讓心跳慢下來。"),
     daily_rest:set("呼……","什麼都不做。只是坐着。"),
     go_home:set("到家了……",`${b}會怎麼看我現在的樣子。`),
     date:set(toyCount()?"嗯……在震……":"嗯……",toyCount()?`跟${b}約會。可是身上的東西還在，好難裝作什麼都沒有。`:`跟${b}約會，好幸福……`),
+    date_pay:set("心跳好快……",`要跟${b}約會了……誰出錢……`),
+    date_place:set("去哪裡……",`跟${b}約會……電影院，還是隨便一個地方……`),
     bf_bed:set("哈啊……喜歡……",`跟${b}在一起的時候，心裡會安靜一點。`),
     witness_view:set(rnd(["不要看……","他在看……","怎麼辦……"]),rnd([
       `${b}在附近。他是不是已經看見了。`,
